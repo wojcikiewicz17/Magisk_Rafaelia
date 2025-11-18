@@ -412,7 +412,112 @@ Contributions should maintain:
 
 ## License
 
-See LICENSE file in repository root.
+**Copyright (C) 2025 Rafael Melo Reis (rafaelmeloreisnovo)**
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+### Legal Compliance and International Copyright
+
+This software complies with international copyright law and is licensed in accordance with multiple international treaties, conventions, and frameworks including but not limited to:
+
+**International Copyright Treaties:**
+- Berne Convention for the Protection of Literary and Artistic Works
+- WIPO Copyright Treaty (WCT) and WIPO Performances and Phonograms Treaty (WPPT)
+- Universal Copyright Convention (UCC)
+- Agreement on Trade-Related Aspects of Intellectual Property Rights (TRIPS)
+- UNESCO Convention on the Protection and Promotion of the Diversity of Cultural Expressions
+- UNESCO conventions on cultural diversity and audiovisual works
+
+**Human Rights and Fundamental Freedoms:**
+- Universal Declaration of Human Rights (UDHR) Article 27 - Right to protection of intellectual property
+- International Covenant on Economic, Social and Cultural Rights (ICESCR) Article 15 - Right to benefit from the protection of moral and material interests
+
+**Regional and Multilateral Agreements:**
+- Vienna Agreement for the Protection of Type Faces
+- Montevideo Convention and related intellectual property frameworks
+- European Union Copyright Directive
+- Other applicable bilateral and multilateral copyright agreements
+
+### Jurisdiction and Applicable Law
+
+This software and its use is subject to applicable laws in multiple jurisdictions including international treaties, conventions, and domestic legislation regarding:
+
+- **Copyright and Intellectual Property Rights**: Full compliance with copyright law, software licensing standards, and intellectual property protections
+- **Data Protection and Privacy**: GDPR (European Union), LGPD (Brazil), and equivalent data protection regulations worldwide
+- **Artificial Intelligence Ethics and Governance**: Responsible AI development, transparency, accountability, and ethical guidelines
+- **Child Protection and Online Safety**: Protection of minors, child online protection acts, and related safeguards
+- **Audio-Visual Works Protection**: Additional protections for multimedia and audio-visual content under Microsoft and international standards
+- **Software Licensing and Distribution**: Open source licensing compliance, GPL compatibility, and software distribution law
+- **Digital Rights Management**: Respect for technological protection measures and digital rights
+- **Interoperability and Technical Standards**: Compliance with international technical standards and interoperability requirements
+
+### Ethical Commitment
+
+This software is developed with explicit consideration for:
+
+- **Human Rights and Fundamental Freedoms**: Respect for dignity, liberty, and fundamental rights of all users
+- **Protection of Children and Vulnerable Populations**: Safeguards against exploitation, abuse, or harmful content
+- **Responsible AI Development and Deployment**: Ethical AI principles including fairness, transparency, and accountability
+- **Data Privacy and Security Best Practices**: Strong data protection, encryption, and secure development practices
+- **Environmental and Societal Impact**: Consideration for sustainability and positive societal contribution
+- **Cultural Diversity and Accessibility**: Inclusive design and respect for diverse cultures and capabilities
+- **Scientific and Spiritual Dialogue (CientiEspiritual)**: Integration of scientific rigor with ethical and spiritual considerations
+
+### Institutional Reference
+
+This work is associated with **Instituto Rafael** and follows the **"ESTADO FRACTAL HAJA"** ethical and legal framework established by Rafael Melo Reis (rafaelmeloreisnovo). This framework represents a comprehensive approach to software licensing that:
+
+- Exceeds minimum legal requirements for copyright protection
+- Integrates multiple international legal frameworks
+- Emphasizes ethical use and societal responsibility
+- Includes provisions for audit, monitoring, and automatic penalties for violations
+- Establishes clear jurisdictional scope across multiple legal systems
+- Protects the interests of creators, users, and society at large
+
+### Automatic Penalties and Audit Clauses
+
+Unauthorized use, distribution, or modification outside the terms of the GNU GPL v3 license may trigger:
+- Automatic termination of license rights
+- Financial penalties under applicable copyright law
+- Legal action in multiple jurisdictions
+- Requirement for independent audit of compliance
+- Additional remedies as provided by law
+
+### Firewall Divino and Security
+
+This software incorporates ethical safeguards ("Firewall Divino") to ensure:
+- Alignment with moral and ethical principles
+- Protection against misuse for harmful purposes
+- Compliance with spiritual and ethical guidelines
+- Respect for human dignity and rights
+
+### Monitoring and Compliance
+
+Users and distributors of this software are expected to:
+- Maintain compliance with all applicable laws and regulations
+- Implement appropriate monitoring and audit procedures
+- Report violations or concerns through official channels
+- Cooperate with compliance audits when requested
+- Maintain records demonstrating legal compliance
+
+### Contact and Questions
+
+For questions regarding licensing, compliance, ethical use, or to report violations, please contact the copyright holder through official repository channels at:
+
+**GitHub**: rafaelmeloreisnovo  
+**Repository**: Magisk_Rafaelia  
+**Associated Institution**: Instituto Rafael
+
+### Additional Resources
+
+- Full GPL v3 License: See LICENSE file in repository root
+- RAFAELIA Meta-Architecture: See project documentation
+- Instituto Rafael Framework: See instituto_Rafael repository (same author)
+- ESTADO FRACTAL HAJA: Comprehensive ethical and legal framework for software development
 
 ---
 

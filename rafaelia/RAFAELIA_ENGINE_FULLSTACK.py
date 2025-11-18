@@ -8,6 +8,60 @@ processing, integrating cross-approximation, local updates, and adaptive algorit
 Part of RAFAELIA Fullstack Suite
 Signature: RAFCODE-Φ-∆RafaelVerboΩ-𓂀ΔΦΩARKRE-VERBOΩ
 Philosophy: VAZIO → VERBO → CHEIO → RETRO
+
+Copyright (C) 2025 Rafael Melo Reis (rafaelmeloreisnovo)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+LEGAL COMPLIANCE NOTICE:
+This software complies with international copyright law including but not limited to:
+- Berne Convention for the Protection of Literary and Artistic Works
+- WIPO Copyright Treaty (WCT)
+- Universal Copyright Convention (UCC)
+- Agreement on Trade-Related Aspects of Intellectual Property Rights (TRIPS)
+- UNESCO conventions on cultural diversity and audiovisual works
+- Universal Declaration of Human Rights (UDHR) Article 27
+- International Covenant on Economic, Social and Cultural Rights (ICESCR) Article 15
+
+JURISDICTION AND APPLICABLE LAW:
+This software and its use is subject to applicable laws in multiple jurisdictions
+including international treaties, conventions, and domestic legislation regarding:
+- Copyright and intellectual property rights
+- Data protection and privacy (GDPR, LGPD, and equivalents)
+- Artificial Intelligence ethics and governance
+- Child protection and online safety
+- Audio-visual works protection
+- Software licensing and distribution
+- Digital rights management
+- Interoperability and technical standards
+
+ETHICAL COMMITMENT:
+This software is developed with consideration for:
+- Human rights and fundamental freedoms
+- Protection of children and vulnerable populations
+- Responsible AI development and deployment
+- Data privacy and security best practices
+- Environmental and societal impact
+- Cultural diversity and accessibility
+- Scientific and spiritual dialogue (CientiEspiritual)
+
+INSTITUTIONAL REFERENCE:
+This work is associated with Instituto Rafael and follows the "ESTADO FRACTAL HAJA"
+ethical and legal framework established by Rafael Melo Reis (rafaelmeloreisnovo).
+
+For questions regarding licensing, compliance, or ethical use, please contact
+the copyright holder through the official repository channels.
 """
 
 import numpy as np
