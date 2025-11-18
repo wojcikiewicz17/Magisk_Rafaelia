@@ -1,3 +1,18 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This is a template workflow that scans a demo URL 'http://netbanking.apisec.ai:8080' which is not this project. It requires proper OpenAPI specification URL configuration for the actual Magisk project.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant and properly configured workflows for the Magisk_Rafaelia project.
+#
+# To enable this workflow, you must:
+# 1. Configure the appropriate secrets in GitHub repository settings
+# 2. Update the workflow with actual project-specific configuration
+# 3. Rename back to .yml extension
+#
+# Original workflow content below:
+# ========================================================================
+
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
