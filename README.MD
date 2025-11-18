@@ -6,6 +6,23 @@
 
 ---
 
+## 🌿 Two-Branch Adaptive Strategy
+
+**Magisk_Rafaelia** uses an evolutionary two-branch workflow for optimal development:
+
+- **`main`**: Stable, production-ready releases
+- **`develop`**: Active development and integration
+
+This cognitive-optimized approach:
+- ✅ Minimizes mental overhead
+- ✅ Ensures code quality through clear gates
+- ✅ Enables rapid iteration on develop
+- ✅ Maintains stability on main
+
+**Contributing?** See [CONTRIBUTING.md](CONTRIBUTING.md) and [Branching Strategy](docs/BRANCHING_STRATEGY.md)
+
+---
+
 ## 🚀 Quick Start
 
 **Want the APK?**
@@ -102,9 +119,14 @@ See [Activation Guide](docs/ACTIVATION_GUIDE.md) for detailed instructions.
 To build Magisk_Rafaelia locally:
 
 ```bash
-# Clone with submodules
+# Clone with submodules (use develop for latest features, main for stable)
 git clone --recurse-submodules https://github.com/rafaelmeloreisnovo/Magisk_Rafaelia.git
 cd Magisk_Rafaelia
+
+# Checkout desired branch
+git checkout develop  # For development
+# or
+git checkout main     # For stable release
 
 # Install Magisk NDK
 python3 build.py ndk

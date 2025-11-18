@@ -2,9 +2,9 @@ name: RAFAELIA CI - native & android (full pipeline)
 
 on:
   push:
-    branches: [main, master, 'dev-*']
+    branches: [main, develop]  # Two-branch adaptive strategy
   pull_request:
-    branches: [main, master]
+    branches: [main, develop]  # Support PRs to both branches
 
 env:
   EMULATOR_NAME: test

@@ -1,0 +1,129 @@
+name: Branch Synchronization
+
+# This workflow helps maintain the two-branch adaptive strategy
+# by ensuring develop stays in sync with main after releases
+
+on:
+  # Trigger when a release is published on main
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  
+  # Allow manual synchronization
+  workflow_dispatch:
+    inputs:
+      source_branch:
+        description: 'Source branch (usually main)'
+        required: true
+        default: 'main'
+      target_branch:
+        description: 'Target branch (usually develop)'
+        required: true
+        default: 'develop'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-branches:
+    name: Synchronize main → develop
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Synchronize branches
+        id: sync
+        run: |
+          set -x
+          
+          SOURCE="${{ github.event.inputs.source_branch || 'main' }}"
+          TARGET="${{ github.event.inputs.target_branch || 'develop' }}"
+          
+          echo "Syncing $SOURCE → $TARGET"
+          
+          # Fetch latest
+          git fetch origin $SOURCE
+          git fetch origin $TARGET || echo "Target branch may not exist yet"
+          
+          # Checkout target branch (create if doesn't exist)
+          if git show-ref --verify --quiet refs/remotes/origin/$TARGET; then
+            git checkout $TARGET
+            git pull origin $TARGET
+          else
+            echo "Creating new $TARGET branch from $SOURCE"
+            git checkout -b $TARGET origin/$SOURCE
+            git push -u origin $TARGET
+            exit 0
+          fi
+          
+          # Merge source into target
+          git merge origin/$SOURCE -m "chore: sync $TARGET with $SOURCE" || {
+            echo "conflict=true" >> $GITHUB_OUTPUT
+            echo "Merge conflict detected"
+            exit 1
+          }
+          
+          # Push changes
+          git push origin $TARGET
+          
+          echo "conflict=false" >> $GITHUB_OUTPUT
+          echo "Synchronization completed successfully"
+      
+      - name: Create issue on conflict
+        if: failure() && steps.sync.outputs.conflict == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🔀 Branch Sync Conflict Detected',
+              body: `## Branch Synchronization Failed
+              
+              A conflict was detected while trying to synchronize branches.
+              
+              **Source**: \`${{ github.event.inputs.source_branch || 'main' }}\`
+              **Target**: \`${{ github.event.inputs.target_branch || 'develop' }}\`
+              
+              ### Action Required
+              
+              Manual intervention is needed to resolve the conflict:
+              
+              \`\`\`bash
+              git checkout develop
+              git pull origin develop
+              git merge origin/main
+              # Resolve conflicts
+              git commit
+              git push origin develop
+              \`\`\`
+              
+              See [BRANCHING_STRATEGY.md](docs/BRANCHING_STRATEGY.md) for more details.
+              
+              **Workflow Run**: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})`,
+              labels: ['sync-conflict', 'needs-attention']
+            })
+
+  notify-success:
+    name: Notify successful sync
+    needs: sync-branches
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Post success comment
+        run: |
+          echo "✅ Branches synchronized successfully"
+          echo "main → develop sync completed"
