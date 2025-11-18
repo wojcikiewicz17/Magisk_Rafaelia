@@ -1,3 +1,18 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This is a template workflow requiring APIsec account setup and configuration. The workflow references a demo project 'VAmPI' and requires secrets (apisec_username, apisec_password) that are not configured for this repository.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant and properly configured workflows for the Magisk_Rafaelia project.
+#
+# To enable this workflow, you must:
+# 1. Configure the appropriate secrets in GitHub repository settings
+# 2. Update the workflow with actual project-specific configuration
+# 3. Rename back to .yml extension
+#
+# Original workflow content below:
+# ========================================================================
+
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support

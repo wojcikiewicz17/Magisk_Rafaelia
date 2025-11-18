@@ -1,3 +1,13 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This is a template workflow. The project uses Gradle and CMake, not Makefile in root.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant workflows for the Magisk_Rafaelia project.
+#
+# Original workflow content below:
+# ========================================================================
+
 name: Makefile CI
 
 on:

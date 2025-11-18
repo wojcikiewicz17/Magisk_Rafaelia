@@ -1,3 +1,13 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This is a template workflow. Native CMake builds are already handled properly by ci.yml workflow.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant workflows for the Magisk_Rafaelia project.
+#
+# Original workflow content below:
+# ========================================================================
+
 # This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
 # See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
 name: CMake on multiple platforms

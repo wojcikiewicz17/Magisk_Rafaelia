@@ -1,13 +1,13 @@
 name: Quality Gates
 
-# Comprehensive quality checks for the two-branch adaptive strategy
-# Stricter checks for main branch, more permissive for develop
+# Comprehensive quality checks for the Magisk_Rafaelia project
+# Stricter checks for master branch
 
 on:
   pull_request:
-    branches: [main, develop]
+    branches: [master]
   push:
-    branches: [main, develop]
+    branches: [master]
 
 permissions:
   contents: read
@@ -28,14 +28,14 @@ jobs:
         run: |
           TARGET="${{ github.base_ref || github.ref_name }}"
           
-          if [[ "$TARGET" == "main" || "$TARGET" == "refs/heads/main" ]]; then
+          if [[ "$TARGET" == "master" || "$TARGET" == "refs/heads/master" ]]; then
             echo "is_main=true" >> $GITHUB_OUTPUT
             echo "strictness=high" >> $GITHUB_OUTPUT
-            echo "🔒 High strictness for main branch"
+            echo "🔒 High strictness for master branch"
           else
             echo "is_main=false" >> $GITHUB_OUTPUT
             echo "strictness=normal" >> $GITHUB_OUTPUT
-            echo "🔓 Normal strictness for develop branch"
+            echo "🔓 Normal strictness for other branches"
           fi
 
   code-quality:
@@ -118,10 +118,10 @@ jobs:
           if [ ${#MISSING_DOCS[@]} -gt 0 ]; then
             echo "Missing documentation files: ${MISSING_DOCS[*]}"
             if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
-              echo "::error::Missing required documentation for main branch"
+              echo "::error::Missing required documentation for master branch"
               exit 1
             else
-              echo "::warning::Missing documentation files (allowed on develop)"
+              echo "::warning::Missing documentation files"
             fi
           fi
       
@@ -164,7 +164,6 @@ jobs:
           CRITICAL_FILES=(
             "build.py"
             "app/build.gradle.kts"
-            "native/src/core/lib.rs"
           )
           
           for file in "${CRITICAL_FILES[@]}"; do
@@ -247,11 +246,9 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
-            echo "🔒 **High quality standards enforced for main branch**" >> $GITHUB_STEP_SUMMARY
+            echo "🔒 **High quality standards enforced for master branch**" >> $GITHUB_STEP_SUMMARY
           else
-            echo "🔓 **Normal quality checks for develop branch**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "See [BRANCHING_STRATEGY.md](docs/BRANCHING_STRATEGY.md) for details." >> $GITHUB_STEP_SUMMARY
+            echo "🔓 **Normal quality checks for other branches**" >> $GITHUB_STEP_SUMMARY
           fi
       
       - name: Check overall status

@@ -1,3 +1,13 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This workflow is designed for a two-branch strategy (main/develop) that does not currently exist in this repository. The actual default branch is 'master', and there is no 'develop' branch. This workflow would fail if triggered.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant workflows for the Magisk_Rafaelia project.
+#
+# Original workflow content below:
+# ========================================================================
+
 name: Branch Synchronization
 
 # This workflow helps maintain the two-branch adaptive strategy
@@ -6,7 +16,7 @@ name: Branch Synchronization
 on:
   # Trigger when a release is published on main
   push:
-    branches: [main]
+    branches: [master]
     tags:
       - 'v*'
   
