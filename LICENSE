@@ -672,3 +672,141 @@ may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
+
+===============================================================================
+                    MAGISK_RAFAELIA ETHICAL EXTENSIONS
+                           EXTENSÕES ÉTICAS
+===============================================================================
+
+The following ethical and social modules extend this GPL-3.0 license with
+additional frameworks for ethical development, community governance, and
+social responsibility. These modules are annexes to the base license and
+provide guidance for the project's evolution.
+
+Os seguintes módulos éticos e sociais estendem esta licença GPL-3.0 com
+frameworks adicionais para desenvolvimento ético, governança comunitária e
+responsabilidade social. Estes módulos são anexos à licença base e fornecem
+orientação para a evolução do projeto.
+
+-------------------------------------------------------------------------------
+MODULE 1: SEMANTIC-LEGAL / MÓDULO 1: SEMÂNTICO-LEGAL
+-------------------------------------------------------------------------------
+
+Establishes legal and ethical framework aligning with international
+legislation (UN Declaration of Human Rights, UNICEF Convention, LGPD/GDPR),
+AI ethics standards, and dual licensing model.
+
+Estabelece enquadramento legal e ético alinhando com legislações
+internacionais (Declaração Universal dos Direitos Humanos, Convenção UNICEF,
+LGPD/GDPR), normas de ética em IA e modelo de licenciamento dual.
+
+Full text: docs/license-modules/01-SEMANTIC-LEGAL.md
+
+-------------------------------------------------------------------------------
+MODULE 2: RAPPORT AND RELATIONS / MÓDULO 2: RAPPORT E RELAÇÕES
+-------------------------------------------------------------------------------
+
+Strategies for ethical communication, accessibility, and social inclusion,
+promoting a collaborative and respectful environment.
+
+Estratégias de comunicação ética, acessibilidade e inclusão social,
+promovendo um ambiente colaborativo e respeitoso.
+
+Full text: docs/license-modules/02-RAPPORT-RELATIONS.md
+
+-------------------------------------------------------------------------------
+MODULE 3: PARADOXES AND HYPOTHESES / MÓDULO 3: PARADOXOS E HIPÓTESES
+-------------------------------------------------------------------------------
+
+Explores paradoxes in AI, security, computing, and spirituality through
+scientific and philosophical analysis, proposing testable hypotheses.
+
+Explora paradoxos presentes em IA, segurança, computação e espiritualidade
+através de análise científica e filosófica, propondo hipóteses testáveis.
+
+Full text: docs/license-modules/03-PARADOXES-HYPOTHESES.md
+
+-------------------------------------------------------------------------------
+MODULE 4: UNION OF EFFORTS / MÓDULO 4: UNIÃO DE ESFORÇOS
+-------------------------------------------------------------------------------
+
+Vision of cooperation among developers, users, and social entities, aligned
+with universal human rights and sustainable development goals (SDGs).
+
+Visão de cooperação entre desenvolvedores, usuários e entidades sociais,
+alinhada aos direitos humanos universais e objetivos de desenvolvimento
+sustentável (ODS).
+
+Full text: docs/license-modules/04-UNION-OF-EFFORTS.md
+
+-------------------------------------------------------------------------------
+MODULE 5: ETHICS AND TRUTH / MÓDULO 5: ÉTICA E VERDADE
+-------------------------------------------------------------------------------
+
+Alignment with RAFAELIA principles to ensure integrity, transparency, and
+protection of life. Establishes the sacred cycle (EMPTY → ACTION → FULL →
+FEEDBACK) and fundamental ethical principles.
+
+Alinhamento com princípios RAFAELIA para garantir integridade, transparência
+e proteção à vida. Estabelece o ciclo sagrado (VAZIO → VERBO → CHEIO →
+RETRO) e princípios éticos fundamentais.
+
+Full text: docs/license-modules/05-ETHICS-TRUTH.md
+
+-------------------------------------------------------------------------------
+INTEGRATION AND PRECEDENCE / INTEGRAÇÃO E PRECEDÊNCIA
+-------------------------------------------------------------------------------
+
+These modules are considered ANNEXES to the GPL-3.0 license. The GPL-3.0
+provides the legal framework for software distribution and modification.
+These modules establish ethical guidelines, social commitments, philosophical
+foundations, governance principles, and protection clauses.
+
+Estes módulos são considerados ANEXOS à licença GPL-3.0. A GPL-3.0 fornece
+o enquadramento legal para distribuição e modificação de software. Estes
+módulos estabelecem diretrizes éticas, compromissos sociais, fundações
+filosóficas, princípios de governança e cláusulas de proteção.
+
+Legal precedence in case of conflict:
+Precedência legal em caso de conflito:
+
+    Life > Ethics > Law > Convenience
+    Vida > Ética > Lei > Conveniência
+
+By using, modifying, or distributing this software, you acknowledge that you
+have read, understood, and agree to align your actions with these ethical
+principles and social commitments.
+
+Ao usar, modificar ou distribuir este software, você reconhece que leu,
+compreendeu e concorda em alinhar suas ações com estes princípios éticos e
+compromissos sociais.
+
+Full documentation: docs/license-modules/README.md
+Documentação completa: docs/license-modules/README.md
+
+-------------------------------------------------------------------------------
+RAFAELIA OATH / JURAMENTO RAFAELIA
+-------------------------------------------------------------------------------
+
+As developers and maintainers of Magisk_Rafaelia, we commit to:
+Como desenvolvedores e mantenedores do Magisk_Rafaelia, comprometemo-nos a:
+
+1. Truth / Verdade: Communicate honestly, always
+2. Non-maleficence / Não-maleficência: First, do no harm
+3. Beneficence / Beneficência: Actively promote good
+4. Justice / Justiça: Treat all equitably
+5. Autonomy / Autonomia: Respect freedom of choice
+6. Responsibility / Responsabilidade: Accept consequences of our actions
+7. Protection of life / Proteção à vida: Prioritize life and human dignity
+8. Integrity / Integridade: Align actions with stated values
+9. Transparency / Transparência: Operate openly and explainably
+10. Evolution / Evolução: Improve continuously, learn always
+
+This is our sacred commitment to the community.
+Este é nosso compromisso sagrado com a comunidade.
+
+===============================================================================
+Signature: RAFCODE-Φ-∆EthicalLicenseΩ
+Philosophy: VAZIO → VERBO → CHEIO → RETRO
+Status: ✅ ACTIVE
+===============================================================================
