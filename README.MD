@@ -23,6 +23,24 @@ This cognitive-optimized approach:
 
 ---
 
+## 🌍 Multilingual Documentation / Documentação Multilíngue
+
+**Documentation available in 91 languages!** / **Documentação disponível em 91 idiomas!**
+
+📚 [**View All Languages / Ver Todos os Idiomas**](docs/LANGUAGES.md) 
+
+Popular languages / Idiomas populares:
+- 🇬🇧 [English](docs/languages/en/README.md)
+- 🇧🇷 [Português (Brasil)](docs/languages/pt-BR/README.md)
+- 🇪🇸 [Español](docs/languages/es/README.md)
+- 🇨🇳 [简体中文](docs/languages/zh-CN/README.md)
+- 🇯🇵 [日本語](docs/languages/ja/README.md)
+- 🇩🇪 [Deutsch](docs/languages/de/README.md)
+- 🇫🇷 [Français](docs/languages/fr/README.md)
+- 🇷🇺 [Русский](docs/languages/ru/README.md)
+
+---
+
 ## 🚀 Quick Start
 
 **Want the APK?**
