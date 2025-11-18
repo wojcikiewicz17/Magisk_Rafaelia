@@ -1,3 +1,13 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This project does not use Conda for Python package management. No environment.yml exists.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant workflows for the Magisk_Rafaelia project.
+#
+# Original workflow content below:
+# ========================================================================
+
 name: Python Package using Conda
 
 on: [push]

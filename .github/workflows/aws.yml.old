@@ -1,3 +1,13 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This project does not use AWS ECS for deployment. This is a generic template not configured for this project.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant workflows for the Magisk_Rafaelia project.
+#
+# Original workflow content below:
+# ========================================================================
+
 # This workflow will build and push a new container image to Amazon ECR,
 # and then will deploy a new task definition to Amazon ECS, when there is a push to the "master" branch.
 #

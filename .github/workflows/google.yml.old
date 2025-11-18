@@ -1,3 +1,13 @@
+# DISABLED WORKFLOW - Renamed to .old
+# 
+# Reason: This project does not use Google Cloud GKE for deployment. This is a generic template.
+#
+# This workflow was disabled during repository cleanup to keep only
+# relevant workflows for the Magisk_Rafaelia project.
+#
+# Original workflow content below:
+# ========================================================================
+
 # This workflow will build a docker container, publish it to Google Container
 # Registry, and deploy it to GKE when there is a push to the "master"
 # branch.
