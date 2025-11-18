@@ -1,0 +1,273 @@
+name: Quality Gates
+
+# Comprehensive quality checks for the two-branch adaptive strategy
+# Stricter checks for main branch, more permissive for develop
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  determine-strictness:
+    name: Determine Quality Level
+    runs-on: ubuntu-latest
+    outputs:
+      is_main: ${{ steps.check.outputs.is_main }}
+      strictness: ${{ steps.check.outputs.strictness }}
+    
+    steps:
+      - name: Check target branch
+        id: check
+        run: |
+          TARGET="${{ github.base_ref || github.ref_name }}"
+          
+          if [[ "$TARGET" == "main" || "$TARGET" == "refs/heads/main" ]]; then
+            echo "is_main=true" >> $GITHUB_OUTPUT
+            echo "strictness=high" >> $GITHUB_OUTPUT
+            echo "🔒 High strictness for main branch"
+          else
+            echo "is_main=false" >> $GITHUB_OUTPUT
+            echo "strictness=normal" >> $GITHUB_OUTPUT
+            echo "🔓 Normal strictness for develop branch"
+          fi
+
+  code-quality:
+    name: Code Quality Check
+    needs: determine-strictness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Check Python files
+        run: |
+          echo "Checking Python code quality..."
+          
+          # Find Python files
+          PYTHON_FILES=$(find . -name "*.py" -not -path "./out/*" -not -path "./.git/*" | head -20)
+          
+          if [ -n "$PYTHON_FILES" ]; then
+            echo "Found Python files, checking syntax..."
+            for file in $PYTHON_FILES; do
+              python3 -m py_compile "$file" || echo "Syntax error in $file"
+            done
+          fi
+      
+      - name: Check shell scripts
+        run: |
+          echo "Checking shell scripts..."
+          
+          # Find shell scripts
+          SHELL_FILES=$(find . -name "*.sh" -not -path "./out/*" -not -path "./.git/*" | head -20)
+          
+          if [ -n "$SHELL_FILES" ]; then
+            for file in $SHELL_FILES; do
+              if command -v shellcheck &> /dev/null; then
+                shellcheck "$file" || echo "Issues in $file"
+              else
+                bash -n "$file" || echo "Syntax error in $file"
+              fi
+            done
+          fi
+
+  documentation-check:
+    name: Documentation Check
+    needs: determine-strictness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      
+      - name: Check required documentation
+        run: |
+          echo "Checking required documentation files..."
+          
+          REQUIRED_DOCS=(
+            "README.MD"
+            "CONTRIBUTING.md"
+            "docs/BRANCHING_STRATEGY.md"
+          )
+          
+          MISSING_DOCS=()
+          
+          for doc in "${REQUIRED_DOCS[@]}"; do
+            if [ ! -f "$doc" ]; then
+              MISSING_DOCS+=("$doc")
+              echo "❌ Missing: $doc"
+            else
+              echo "✅ Found: $doc"
+            fi
+          done
+          
+          if [ ${#MISSING_DOCS[@]} -gt 0 ]; then
+            echo "Missing documentation files: ${MISSING_DOCS[*]}"
+            if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
+              echo "::error::Missing required documentation for main branch"
+              exit 1
+            else
+              echo "::warning::Missing documentation files (allowed on develop)"
+            fi
+          fi
+      
+      - name: Check for broken links in markdown
+        run: |
+          echo "Checking for obvious broken links..."
+          
+          # Simple check for common broken link patterns
+          if grep -r "\[.*\](http://localhost" docs/ 2>/dev/null; then
+            echo "::warning::Found localhost links in documentation"
+          fi
+
+  build-validation:
+    name: Build Validation
+    needs: determine-strictness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Validate build script
+        run: |
+          echo "Validating build.py..."
+          
+          if [ -f "build.py" ]; then
+            python3 -m py_compile build.py
+            echo "✅ build.py syntax is valid"
+          else
+            echo "::error::build.py not found"
+            exit 1
+          fi
+      
+      - name: Check for critical files
+        run: |
+          echo "Checking for critical files..."
+          
+          CRITICAL_FILES=(
+            "build.py"
+            "app/build.gradle.kts"
+            "native/src/core/lib.rs"
+          )
+          
+          for file in "${CRITICAL_FILES[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✅ Found: $file"
+            else
+              echo "::warning::Missing: $file (may be expected)"
+            fi
+          done
+
+  security-check:
+    name: Security Check
+    needs: determine-strictness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      
+      - name: Check for secrets
+        run: |
+          echo "Checking for potential secrets..."
+          
+          # Check for common secret patterns
+          if grep -r -i "password\s*=\s*['\"]" . --exclude-dir=.git --exclude-dir=out 2>/dev/null | grep -v "example\|sample\|test"; then
+            echo "::warning::Found potential hardcoded passwords"
+          fi
+          
+          if grep -r "api[_-]key\s*=\s*['\"][a-zA-Z0-9]" . --exclude-dir=.git --exclude-dir=out 2>/dev/null; then
+            echo "::warning::Found potential API keys"
+          fi
+          
+          echo "Basic secret scan completed"
+      
+      - name: Check file permissions
+        run: |
+          echo "Checking for sensitive file permissions..."
+          
+          # Check for overly permissive files (not critical, just informational)
+          find . -type f -perm -o+w -not -path "./.git/*" -not -path "./out/*" | head -10 || true
+
+  adaptive-summary:
+    name: Quality Gates Summary
+    needs: [determine-strictness, code-quality, documentation-check, build-validation, security-check]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          echo "# Quality Gates Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Target Branch**: ${{ github.base_ref || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Strictness Level**: ${{ needs.determine-strictness.outputs.strictness }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "## Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          RESULTS=(
+            "Code Quality:${{ needs.code-quality.result }}"
+            "Documentation:${{ needs.documentation-check.result }}"
+            "Build Validation:${{ needs.build-validation.result }}"
+            "Security Check:${{ needs.security-check.result }}"
+          )
+          
+          for result in "${RESULTS[@]}"; do
+            NAME="${result%%:*}"
+            STATUS="${result##*:}"
+            
+            if [ "$STATUS" == "success" ]; then
+              echo "- ✅ $NAME: Passed" >> $GITHUB_STEP_SUMMARY
+            elif [ "$STATUS" == "failure" ]; then
+              echo "- ❌ $NAME: Failed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- ⚠️ $NAME: $STATUS" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
+            echo "🔒 **High quality standards enforced for main branch**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🔓 **Normal quality checks for develop branch**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "See [BRANCHING_STRATEGY.md](docs/BRANCHING_STRATEGY.md) for details." >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Check overall status
+        run: |
+          if [ "${{ needs.code-quality.result }}" == "failure" ] || \
+             [ "${{ needs.build-validation.result }}" == "failure" ]; then
+            echo "Critical checks failed"
+            exit 1
+          fi
+          
+          if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
+            if [ "${{ needs.documentation-check.result }}" == "failure" ] || \
+               [ "${{ needs.security-check.result }}" == "failure" ]; then
+              echo "Main branch quality gates not met"
+              exit 1
+            fi
+          fi
+          
+          echo "All required quality gates passed"

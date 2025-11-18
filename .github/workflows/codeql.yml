@@ -13,9 +13,9 @@ name: "CodeQL Advanced"
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [main, develop]  # Two-branch adaptive strategy
   pull_request:
-    branches: [ "master" ]
+    branches: [main, develop]  # Analyze PRs to both branches
   schedule:
     - cron: '38 0 * * 1'
 

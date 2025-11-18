@@ -2,14 +2,14 @@ name: Magisk Build (with enhanced logging)
 
 on:
   push:
-    branches: [master]
+    branches: [main, develop]  # Two-branch adaptive strategy
     paths:
       - "app/**"
       - "native/**"
       - "build.py"
       - ".github/workflows/build.yml"
   pull_request:
-    branches: [master]
+    branches: [main, develop]  # Support PRs to both branches
   workflow_dispatch:
 
 permissions:
