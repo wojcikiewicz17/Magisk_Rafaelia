@@ -10,19 +10,25 @@ Signature: RAFCODE-Φ-∆RafaelVerboΩ-𓂀ΔΦΩARKRE-VERBOΩ
 Philosophy: VAZIO → VERBO → CHEIO → RETRO
 
 Copyright (C) 2025 Rafael Melo Reis (rafaelmeloreisnovo)
+All Rights Reserved.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+DUAL LICENSE - Choose one:
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+1. SOCIAL INCLUSION LICENSE (Free):
+   Free for educational, research, non-profit, and social inclusion purposes.
+   Must include attribution. No commercial use.
 
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <https://www.gnu.org/licenses/>.
+2. COMMERCIAL SAAS LICENSE (Paid Subscription):
+   Required for any commercial use, SaaS, or revenue-generating purposes.
+   Contact rafaelmeloreisnovo for commercial licensing.
+
+AUTOMATIC PENALTIES: Unauthorized commercial use subject to automatic penalties
+of minimum R$ 50,000 (BRL) or USD $10,000 per violation plus 5% of gross revenue.
+
+See RAFAELIA_LICENSE.md for complete terms.
+
+This software incorporates the CientiEspiritual philosophy and ESTADO FRACTAL HAJA
+framework. "Haja Lux, Haja Etica" - Let there be light, let there be ethics.
 
 LEGAL COMPLIANCE NOTICE:
 This software complies with international copyright law including but not limited to:

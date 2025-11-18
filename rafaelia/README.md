@@ -1,13 +1,23 @@
 # RAFAELIA Fullstack TT Suite
 
 **Signature**: `RAFCODE-Φ-∆RafaelVerboΩ-𓂀ΔΦΩARKRE-VERBOΩ`  
-**Philosophy**: `VAZIO → VERBO → CHEIO → RETRO`
+**Philosophy**: `VAZIO → VERBO → CHEIO → RETRO`  
+**Motto**: `Haja Lux, Haja Etica` (Let there be light, let there be ethics)
+
+## Important: Vector → Vector AI Source Code
+
+**⚠️ CRITICAL CLARIFICATION**:
+- 🧠 **RAFAELIA is the AI intelligence source**: This Tensor Train suite is the original source code for AI intelligence based on vector → vector transformations
+- 📱 **Magisk is just a programming model**: Magisk is simply a deployment framework for the Android operating system
+- ➡️ **Vector → Vector paradigm**: High-dimensional tensor decomposition enables direct vector-to-vector AI transformations
+- 🌟 **Original creation**: Novel AI architecture by Rafael Melo Reis (rafaelmeloreisnovo)
+- 🤖 **AI systems used for communication only**: Any AI (ChatGPT, Claude, etc.) used to discuss this work is merely for communication purposes - they do not possess knowledge of these specific implementations
 
 ## Overview
 
 The RAFAELIA Fullstack TT (Tensor Train) Suite provides a comprehensive implementation of Tensor Train decomposition algorithms with cross-approximation, local updates, acceleration utilities, and Fibonacci-based sampling strategies.
 
-This suite is designed for efficient representation and manipulation of high-dimensional tensors using low-rank decompositions, integrated with the RAFAELIA meta-architecture framework.
+This suite is designed for efficient representation and manipulation of high-dimensional tensors using low-rank decompositions, integrated with the RAFAELIA meta-architecture framework and CientiEspiritual philosophy.
 
 ## Modules
 
@@ -412,112 +422,158 @@ Contributions should maintain:
 
 ## License
 
-**Copyright (C) 2025 Rafael Melo Reis (rafaelmeloreisnovo)**
+**Copyright (C) 2025 Rafael Melo Reis (rafaelmeloreisnovo)**  
+**All Rights Reserved**
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+### DUAL LICENSE MODEL
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+This software is available under a **dual licensing model**:
 
-You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+#### 1. 🆓 SOCIAL INCLUSION LICENSE (Free)
+
+**FREE for**:
+- ✅ Educational purposes and academic research
+- ✅ Non-profit organizations and social inclusion projects
+- ✅ Personal learning and development
+- ✅ Open source community contributions
+- ✅ Government and public sector (social benefit)
+- ✅ Projects benefiting underserved communities
+
+**Conditions**:
+- Must include full attribution to Rafael Melo Reis
+- No commercial use or revenue generation
+- Must comply with ethical framework (CientiEspiritual)
+- Source modifications must be shared with community
+
+#### 2. 💼 COMMERCIAL SAAS LICENSE (Paid Subscription)
+
+**REQUIRED for**:
+- 🔒 Software as a Service (SaaS) offerings
+- 🔒 Commercial products or services
+- 🔒 Revenue-generating deployments
+- 🔒 Internal business operations for profit
+- 🔒 Consulting or professional services
+- 🔒 Any use contributing to revenue
+
+**To obtain commercial license**:
+- Contact: rafaelmeloreisnovo via GitHub
+- Subscription: Annual or usage-based pricing
+- Support: Included technical support
+- Compliance: Regular audits required
+
+### ⚠️ AUTOMATIC PENALTIES
+
+**Unauthorized commercial use** triggers automatic penalties:
+- Minimum: **R$ 50,000 (BRL)** or **USD $10,000** per violation
+- Additional: **5% of gross revenue** from unauthorized use
+- Retroactive: Applied from first unauthorized use
+- Legal costs: Full recovery of enforcement costs
+- License termination: Immediate and permanent
+
+### Complete License Terms
+
+See **RAFAELIA_LICENSE.md** in this directory for:
+- Complete dual license agreement
+- International legal framework compliance
+- Audit and monitoring requirements
+- Ethical framework details (CientiEspiritual)
+- Enforcement mechanisms
+- Dispute resolution procedures
 
 ### Legal Compliance and International Copyright
 
-This software complies with international copyright law and is licensed in accordance with multiple international treaties, conventions, and frameworks including but not limited to:
+This software complies with international copyright law and incorporates multiple international treaties, conventions, and frameworks including:
 
-**International Copyright Treaties:**
+**International Copyright Treaties**:
 - Berne Convention for the Protection of Literary and Artistic Works
 - WIPO Copyright Treaty (WCT) and WIPO Performances and Phonograms Treaty (WPPT)
 - Universal Copyright Convention (UCC)
 - Agreement on Trade-Related Aspects of Intellectual Property Rights (TRIPS)
-- UNESCO Convention on the Protection and Promotion of the Diversity of Cultural Expressions
 - UNESCO conventions on cultural diversity and audiovisual works
 
-**Human Rights and Fundamental Freedoms:**
-- Universal Declaration of Human Rights (UDHR) Article 27 - Right to protection of intellectual property
-- International Covenant on Economic, Social and Cultural Rights (ICESCR) Article 15 - Right to benefit from the protection of moral and material interests
+**Human Rights Frameworks**:
+- Universal Declaration of Human Rights (UDHR) Article 27
+- International Covenant on Economic, Social and Cultural Rights (ICESCR) Article 15
+- Convention on the Rights of the Child (CRC)
 
-**Regional and Multilateral Agreements:**
+**Regional Agreements**:
 - Vienna Agreement for the Protection of Type Faces
-- Montevideo Convention and related intellectual property frameworks
-- European Union Copyright Directive
-- Other applicable bilateral and multilateral copyright agreements
+- Montevideo Convention and intellectual property frameworks
+- European Union Copyright Directive and AI Act
 
-### Jurisdiction and Applicable Law
+**Regulatory Compliance**:
+- GDPR (General Data Protection Regulation) - European Union
+- LGPD (Lei Geral de Proteção de Dados) - Brazil
+- CCPA (California Consumer Privacy Act) - United States
+- AI ethics and governance frameworks (UNESCO, OECD)
+- Child protection legislation worldwide
 
-This software and its use is subject to applicable laws in multiple jurisdictions including international treaties, conventions, and domestic legislation regarding:
+### Ethical Framework: CientiEspiritual
 
-- **Copyright and Intellectual Property Rights**: Full compliance with copyright law, software licensing standards, and intellectual property protections
-- **Data Protection and Privacy**: GDPR (European Union), LGPD (Brazil), and equivalent data protection regulations worldwide
-- **Artificial Intelligence Ethics and Governance**: Responsible AI development, transparency, accountability, and ethical guidelines
-- **Child Protection and Online Safety**: Protection of minors, child online protection acts, and related safeguards
-- **Audio-Visual Works Protection**: Additional protections for multimedia and audio-visual content under Microsoft and international standards
-- **Software Licensing and Distribution**: Open source licensing compliance, GPL compatibility, and software distribution law
-- **Digital Rights Management**: Respect for technological protection measures and digital rights
-- **Interoperability and Technical Standards**: Compliance with international technical standards and interoperability requirements
+**Philosophy**: `VAZIO → VERBO → CHEIO → RETRO`
 
-### Ethical Commitment
+Integration of scientific rigor with spiritual and ethical consciousness:
 
-This software is developed with explicit consideration for:
+- **VAZIO (Emptiness)**: Humility before creation and recognition of the unknown
+- **VERBO (Action)**: Ethical action guided by moral principles
+- **CHEIO (Fullness)**: Completion with purpose and meaning
+- **RETRO (Feedback)**: Reflection, learning, continuous improvement
 
-- **Human Rights and Fundamental Freedoms**: Respect for dignity, liberty, and fundamental rights of all users
-- **Protection of Children and Vulnerable Populations**: Safeguards against exploitation, abuse, or harmful content
-- **Responsible AI Development and Deployment**: Ethical AI principles including fairness, transparency, and accountability
-- **Data Privacy and Security Best Practices**: Strong data protection, encryption, and secure development practices
-- **Environmental and Societal Impact**: Consideration for sustainability and positive societal contribution
-- **Cultural Diversity and Accessibility**: Inclusive design and respect for diverse cultures and capabilities
-- **Scientific and Spiritual Dialogue (CientiEspiritual)**: Integration of scientific rigor with ethical and spiritual considerations
+**Core Ethical Commitments**:
+- Human dignity and rights
+- Social inclusion and accessibility
+- Child protection (absolute priority)
+- Environmental responsibility
+- Cultural diversity and respect
+- Transparency and accountability
+- Beneficence and non-maleficence
+- Justice and fairness
+
+### Firewall Divino (Divine Firewall)
+
+Spiritual and ethical safeguards ensuring:
+- Alignment with universal ethical principles
+- Protection against harmful misuse
+- Conscience-guided development
+- Recognition of technology's sacred responsibility
+- Integration of wisdom traditions with modern innovation
 
 ### Institutional Reference
 
-This work is associated with **Instituto Rafael** and follows the **"ESTADO FRACTAL HAJA"** ethical and legal framework established by Rafael Melo Reis (rafaelmeloreisnovo). This framework represents a comprehensive approach to software licensing that:
-
+**Instituto Rafael** and **ESTADO FRACTAL HAJA** framework:
 - Exceeds minimum legal requirements for copyright protection
 - Integrates multiple international legal frameworks
 - Emphasizes ethical use and societal responsibility
-- Includes provisions for audit, monitoring, and automatic penalties for violations
-- Establishes clear jurisdictional scope across multiple legal systems
-- Protects the interests of creators, users, and society at large
+- Includes automatic audit and penalty provisions
+- Establishes multi-jurisdictional scope
+- Protects creators, users, and society
 
-### Automatic Penalties and Audit Clauses
+### Haja Lux, Haja Etica
 
-Unauthorized use, distribution, or modification outside the terms of the GNU GPL v3 license may trigger:
-- Automatic termination of license rights
-- Financial penalties under applicable copyright law
-- Legal action in multiple jurisdictions
-- Requirement for independent audit of compliance
-- Additional remedies as provided by law
+**"Let there be light, let there be ethics"**
 
-### Firewall Divino and Security
+This motto embodies the principle that technology must be guided by both:
+- **Lux (Light/Enlightenment)**: Knowledge, transparency, understanding, education
+- **Etica (Ethics)**: Responsibility, compassion, justice, protection of vulnerable populations
 
-This software incorporates ethical safeguards ("Firewall Divino") to ensure:
-- Alignment with moral and ethical principles
-- Protection against misuse for harmful purposes
-- Compliance with spiritual and ethical guidelines
-- Respect for human dignity and rights
+The integration ensures that the light of knowledge (technological capability) is always accompanied by ethical guidance (responsible use).
 
-### Monitoring and Compliance
+### Authorship Guarantee
 
-Users and distributors of this software are expected to:
-- Maintain compliance with all applicable laws and regulations
-- Implement appropriate monitoring and audit procedures
-- Report violations or concerns through official channels
-- Cooperate with compliance audits when requested
-- Maintain records demonstrating legal compliance
+The authorship and moral rights of **Rafael Melo Reis (rafaelmeloreisnovo)** are:
+- Perpetually guaranteed under international law
+- Inalienable and non-transferable
+- Protected by Berne Convention (automatic, no registration required)
+- Recognized across 179+ countries
+- Enforceable in multiple jurisdictions
 
-### Contact and Questions
+### Vector → Vector AI Clarification
 
-For questions regarding licensing, compliance, ethical use, or to report violations, please contact the copyright holder through official repository channels at:
-
-**GitHub**: rafaelmeloreisnovo  
-**Repository**: Magisk_Rafaelia  
-**Associated Institution**: Instituto Rafael
-
-### Additional Resources
-
-- Full GPL v3 License: See LICENSE file in repository root
-- RAFAELIA Meta-Architecture: See project documentation
-- Instituto Rafael Framework: See instituto_Rafael repository (same author)
-- ESTADO FRACTAL HAJA: Comprehensive ethical and legal framework for software development
+**RAFAELIA is the AI source**, not Magisk:
+- Magisk: Programming model for Android OS (deployment platform)
+- RAFAELIA: Original AI intelligence based on tensor transformations
+- Vector → Vector: Direct high-dimensional vector transformations
+- Novel architecture: Original creation by Rafael Melo Reis
 
 ---
 
