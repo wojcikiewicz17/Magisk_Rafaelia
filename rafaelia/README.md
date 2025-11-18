@@ -19,9 +19,84 @@ The RAFAELIA Fullstack TT (Tensor Train) Suite provides a comprehensive implemen
 
 This suite is designed for efficient representation and manipulation of high-dimensional tensors using low-rank decompositions, integrated with the RAFAELIA meta-architecture framework and CientiEspiritual philosophy.
 
+## 📦 Modular Organization
+
+**NEW**: RAFAELIA is now organized as a proper Python package with modular structure following software engineering best practices.
+
+```
+rafaelia/
+├── core/              # Module 1: Core TT algorithms
+│   ├── tt_cross.py   # TT-cross approximation
+│   └── tt_update.py  # Local updates and ALS
+├── utils/             # Module 3: Sampling & optimization
+│   ├── spiral.py     # Fibonacci spiral sampling
+│   └── acceleration.py  # Acceleration utilities
+├── integration/       # Module 2: Integration & orchestration
+│   └── engine.py     # Main RAFAELIA engine
+├── tests/             # Module 4: Testing & QA
+│   └── test_smoke.py # 25 comprehensive tests
+└── docs/              # Module 5: Documentation & legal
+    ├── RAFAELIA_LICENSE.md
+    ├── LEGAL_FRAMEWORK_COMPREHENSIVE.md
+    └── BEST_PRACTICES_COMPLETE.md
+```
+
+**See `MODULE_ORGANIZATION.md` for complete modular structure documentation.**
+
+## Quick Start
+
+### Installation
+
+```bash
+# Basic installation (numpy only)
+cd rafaelia
+pip install -e .
+
+# With all optional dependencies
+pip install -e ".[all]"
+
+# For development
+pip install -e ".[dev]"
+```
+
+### Usage - Recommended Import Pattern
+
+```python
+# Clean, simple imports
+from rafaelia import RAFAELIAEngine, TTCrossApproximation
+from rafaelia import FibonacciSpiral, TTAccelerator
+
+# Use the engine
+engine = RAFAELIAEngine({'use_gpu': False})
+stats = engine.approximate_tensor(
+    lambda idx: sum(idx),
+    shape=[10, 12, 8],
+    ranks=[1, 4, 6, 1],
+    max_iter=50
+)
+print(f"Error: {stats['error']:.2e}")
+
+# Use individual components
+spiral = FibonacciSpiral(dim=3)
+points = spiral.generate_lattice(100, [10, 10, 10])
+```
+
+### Alternative: Import from Submodules
+
+```python
+# More explicit imports
+from rafaelia.core import TTCrossApproximation, TTLocalUpdate
+from rafaelia.integration import RAFAELIAEngine
+from rafaelia.utils import FibonacciSpiral, TTAccelerator
+```
+
 ## Modules
 
-### 1. RAFAELIA_TT_CROSS_FULL.py
+### Module 1: Core TT Algorithms (`rafaelia.core`)
+
+**Purpose**: Core tensor train decomposition algorithms
+
+#### `core.tt_cross` - TT-Cross Approximation
 
 Implements TT-cross approximation algorithm for efficient tensor decomposition.
 
@@ -35,7 +110,7 @@ Implements TT-cross approximation algorithm for efficient tensor decomposition.
 
 **Key Class:** `TTCrossApproximation`
 
-### 2. RAFAELIA_TT_UPDATE_FULL.py
+#### `core.tt_update` - Local Updates
 
 Provides local update algorithms for online TT refinement.
 
@@ -48,7 +123,11 @@ Provides local update algorithms for online TT refinement.
 
 **Key Class:** `TTLocalUpdate`
 
-### 3. RAFAELIA_ENGINE_FULLSTACK.py
+### Module 2: Integration & Orchestration (`rafaelia.integration`)
+
+**Purpose**: Main orchestration engine integrating all components
+
+#### `integration.engine` - RAFAELIA Engine
 
 Main orchestration engine integrating all TT operations.
 
@@ -62,7 +141,11 @@ Main orchestration engine integrating all TT operations.
 
 **Key Class:** `RAFAELIAEngine`
 
-### 4. RAFAELIA_SPIRAL_FIBONACCI.py
+### Module 3: Sampling & Optimization (`rafaelia.utils`)
+
+**Purpose**: Utility functions for sampling and acceleration
+
+#### `utils.spiral` - Fibonacci Spiral Sampling
 
 Fibonacci-based spiral sampling for quasi-random point generation.
 
@@ -76,7 +159,7 @@ Fibonacci-based spiral sampling for quasi-random point generation.
 
 **Key Classes:** `FibonacciSpiral`, `GoldenRatioSampler`
 
-### 5. RAFAELIA_TT_ACCEL.py
+#### `utils.acceleration` - TT Acceleration
 
 Acceleration utilities for TT operations.
 
@@ -90,6 +173,30 @@ Acceleration utilities for TT operations.
 - Parallel sampling support
 
 **Key Classes:** `TTAccelerator`, `TTCache`, `PerformanceProfiler`
+
+### Module 4: Testing & QA (`rafaelia.tests`)
+
+**Purpose**: Comprehensive test suite ensuring code quality
+
+- 25 smoke tests covering all modules
+- Small tensor shapes for fast execution
+- Checkpoint and hash verification
+
+**Run tests:**
+```bash
+cd rafaelia
+python -m pytest tests/
+# or
+python tests/test_smoke.py
+```
+
+### Module 5: Documentation & Legal (`rafaelia/docs/`)
+
+**Purpose**: Legal framework and comprehensive documentation
+
+- `RAFAELIA_LICENSE.md` (19 KB): Dual license agreement
+- `LEGAL_FRAMEWORK_COMPREHENSIVE.md` (36 KB): 7×42 validation, jurisprudence
+- `BEST_PRACTICES_COMPLETE.md` (19 KB): Implementation guide
 
 ## Dependencies
 
@@ -591,8 +698,19 @@ The cycle of creation, execution, completion, and reflection.
 
 ## Additional Documentation
 
+### Module Organization
+See **`MODULE_ORGANIZATION.md`** (10 KB) for:
+- Complete modular structure documentation
+- Module descriptions and dependencies
+- Installation guide (`setup.py` configuration)
+- Import patterns (recommended and alternative)
+- Package metadata access
+- Backward compatibility notes
+- Best practices applied in organization
+- Testing structure and commands
+
 ### Comprehensive Legal Framework
-See **`LEGAL_FRAMEWORK_COMPREHENSIVE.md`** (36 KB) for:
+See **`docs/LEGAL_FRAMEWORK_COMPREHENSIVE.md`** (36 KB) for:
 - 7×42 Validation Methodology (294-point legal analysis)
 - 360-Degree Review Matrix (8 perspectives)
 - Complete module organization with legal status
@@ -606,7 +724,7 @@ See **`LEGAL_FRAMEWORK_COMPREHENSIVE.md`** (36 KB) for:
 - Decision validation matrix (302 validation points)
 
 ### Complete Best Practices
-See **`BEST_PRACTICES_COMPLETE.md`** (19 KB) for:
+See **`docs/BEST_PRACTICES_COMPLETE.md`** (19 KB) for:
 - Code quality and architecture standards
 - Security and privacy (LGPD/GDPR compliance)
 - Ethical AI development (UNESCO principles)
@@ -619,7 +737,7 @@ See **`BEST_PRACTICES_COMPLETE.md`** (19 KB) for:
 - Human rights integration
 
 ### Dual License Agreement
-See **`RAFAELIA_LICENSE.md`** (19 KB) for:
+See **`docs/RAFAELIA_LICENSE.md`** (19 KB) for:
 - Complete dual license terms
 - Social inclusion vs. commercial licensing
 - Automatic penalty provisions
