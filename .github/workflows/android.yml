@@ -65,7 +65,7 @@ jobs:
     
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
-      if: always()
+      if: hashFiles('out/app-debug.apk') != ''
       with:
         name: app-debug-apk
         path: out/app-debug.apk
