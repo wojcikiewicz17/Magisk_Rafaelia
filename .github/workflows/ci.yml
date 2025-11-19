@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set executable permissions for scripts
         run: |
@@ -86,6 +88,8 @@ jobs:
       ANDROID_SDK_ROOT: ${{ runner.temp }}/android-sdk
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set executable permissions for scripts
         run: |
@@ -103,11 +107,17 @@ jobs:
           echo "=========================================="
           echo "RAFAELIA activation marker read (non-fatal)"
 
-      - name: Setup JDK
+      - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '11'
+          java-version: '21'
+          cache: gradle
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Install Android SDK & tools
         uses: android-actions/setup-sdk@v2
@@ -126,22 +136,71 @@ jobs:
           yes | ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager \
             --licenses
 
-      - name: Build APK
-        run: ./gradlew assembleDebug --stacktrace
+      - name: Setup Magisk NDK
+        run: python3 build.py ndk
+        continue-on-error: false
+
+      - name: Build APK using build.py
+        id: build
+        run: python3 build.py -v all
+        continue-on-error: true
+
+      - name: Verify APK was generated
+        id: verify
+        run: |
+          echo "Verifying APK generation..."
+          if [ -f "out/app-debug.apk" ]; then
+            echo "✅ Debug APK generated successfully"
+            ls -lh out/app-debug.apk
+            echo "apk_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ APK not found in expected location"
+            echo "Contents of out/ directory:"
+            ls -la out/ || echo "out/ directory does not exist"
+            echo "apk_exists=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Generate manifest (artifact)
+        if: steps.verify.outputs.apk_exists == 'true'
         run: |
           .github/scripts/generate_manifest.sh \
-            app/build/outputs/apk/debug/app-debug.apk \
+            out/app-debug.apk \
             RAFAELIA_MANIFEST.json
 
       - name: Upload APK & manifest
         uses: actions/upload-artifact@v4
+        if: always()
+        continue-on-error: true
         with:
           name: android-artifacts
           path: |
-            app/build/outputs/apk/debug/app-debug.apk
+            out/app-debug.apk
             RAFAELIA_MANIFEST.json
+      
+      - name: Build Summary
+        if: always()
+        run: |
+          echo "# Android Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "out/app-debug.apk" ]; then
+            SIZE=$(ls -lh out/app-debug.apk | awk '{print $5}')
+            echo "✅ **Debug APK Generated**: $SIZE" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Debug APK**: Build failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f "RAFAELIA_MANIFEST.json" ]; then
+            echo "✅ **Manifest Generated**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Manifest**: Not generated" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Fail if APK was not generated
+        if: steps.verify.outputs.apk_exists != 'true'
+        run: |
+          echo "::error::APK generation failed. Please review build logs."
+          exit 1
 
   android-instrumented:
     name: Instrumented tests (emulator) and snapshot
@@ -151,6 +210,8 @@ jobs:
       ANDROID_SDK_ROOT: ${{ runner.temp }}/android-sdk
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup emulator & tools
         uses: android-actions/setup-sdk@v2

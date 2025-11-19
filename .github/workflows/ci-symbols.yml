@@ -20,12 +20,15 @@ jobs:
 
       - name: Download native-artifacts
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: native-artifacts
-          path: native_artifacts || true
+          path: native_artifacts
 
       - name: Upload debug symbols (if present)
         uses: actions/upload-artifact@v4
+        if: always()
+        continue-on-error: true
         with:
           name: debug-symbols
           path: |
@@ -34,9 +37,10 @@ jobs:
 
       - name: Download emulator snapshot (if any)
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: emulator-snapshot
-          path: emulator_snapshot || true
+          path: emulator_snapshot
 
       - name: ndk-stack decode (if tombstone present)
         run: |

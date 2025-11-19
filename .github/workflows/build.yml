@@ -125,6 +125,36 @@ jobs:
           ./build.py -v all 2>&1 | tee out/logs/build_debug.log
         continue-on-error: false
 
+      - name: Verify APKs were generated
+        run: |
+          echo "Verifying APK generation..."
+          MISSING_APKS=0
+          
+          if [ -f "out/app-release.apk" ]; then
+            echo "✅ Release APK found: out/app-release.apk"
+            ls -lh out/app-release.apk
+          else
+            echo "⚠️ Release APK not found"
+            MISSING_APKS=$((MISSING_APKS + 1))
+          fi
+          
+          if [ -f "out/app-debug.apk" ]; then
+            echo "✅ Debug APK found: out/app-debug.apk"
+            ls -lh out/app-debug.apk
+          else
+            echo "⚠️ Debug APK not found"
+            MISSING_APKS=$((MISSING_APKS + 1))
+          fi
+          
+          if [ $MISSING_APKS -eq 2 ]; then
+            echo "❌ ERROR: No APKs were generated!"
+            echo "Contents of out/ directory:"
+            ls -la out/ || echo "out/ directory does not exist"
+            exit 1
+          fi
+          
+          echo "APK verification completed with $MISSING_APKS missing APK(s)"
+
       - name: Stop gradle daemon (Unix)
         if: runner.os != 'Windows'
         run: |
@@ -169,6 +199,7 @@ jobs:
 
       - name: Upload build artifacts and logs (always)
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: ${{ github.sha }}-out
           path: |
@@ -197,8 +228,36 @@ jobs:
 
       - name: Upload mapping and native debug symbols (if exists)
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: ${{ github.sha }}-symbols
           path: app/apk/build/outputs
           compression-level: 9
           retention-days: 7
+      
+      - name: Build Summary
+        if: always()
+        run: |
+          echo "# Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## APK Generation Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "out/app-release.apk" ]; then
+            SIZE=$(ls -lh out/app-release.apk | awk '{print $5}')
+            echo "- ✅ **Release APK**: Generated ($SIZE)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ **Release APK**: Not generated" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ -f "out/app-debug.apk" ]; then
+            SIZE=$(ls -lh out/app-debug.apk | awk '{print $5}')
+            echo "- ✅ **Debug APK**: Generated ($SIZE)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- ❌ **Debug APK**: Not generated" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check the **Artifacts** section above to download generated files." >> $GITHUB_STEP_SUMMARY
