@@ -36,8 +36,9 @@ jobs:
       continue-on-error: false
     
     - name: Build with build.py (debug)
+      id: build
       run: python3 build.py -v all
-      continue-on-error: false
+      continue-on-error: true
     
     - name: Verify APK was generated
       run: |
@@ -52,6 +53,16 @@ jobs:
           exit 1
         fi
     
+    - name: Upload build logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs
+        path: |
+          out/logs
+          *.log
+        retention-days: 7
+    
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       if: always()
@@ -59,3 +70,9 @@ jobs:
         name: app-debug-apk
         path: out/app-debug.apk
         retention-days: 7
+    
+    - name: Fail job if build failed
+      if: steps.build.outcome == 'failure'
+      run: |
+        echo "::error::Build failed. Check build logs for details."
+        exit 1
