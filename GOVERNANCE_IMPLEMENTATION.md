@@ -595,7 +595,7 @@ def validate_governance_compliance():
 
 ### Security Controls Mapping
 
-See `docs/governance/security/controls-matrix.md` for complete mapping of NIST 800-53 controls to implementation.
+*Mapping of NIST 800-53 controls to implementation will be provided in a future update.*
 
 ---
 
