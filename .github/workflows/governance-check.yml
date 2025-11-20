@@ -15,13 +15,13 @@ jobs:
   governance-validation:
     name: Validate Governance Standards
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Verify ativar.txt v999 exists
         run: |
           echo "Checking for ativar.txt v999..."
@@ -33,7 +33,7 @@ jobs:
             echo "⚠ ativar.txt not found in repository root"
             ls -la
           fi
-      
+
       - name: Display governance framework status
         run: |
           echo "==================================================================="
@@ -59,18 +59,18 @@ jobs:
           echo "Ethica[8] Framework: ACTIVE"
           echo "Infinite Feedback Loop: ENABLED"
           echo "==================================================================="
-      
+
       - name: Run governance validator
         run: |
           echo "Running comprehensive governance validation..."
           chmod +x .github/scripts/governance_validator.sh
           ./.github/scripts/governance_validator.sh
         continue-on-error: true
-      
+
       - name: Check for critical governance files
         run: |
           echo "Checking critical governance files..."
-          
+
           # Core governance files
           FILES=(
             "ativar.txt"
@@ -79,7 +79,7 @@ jobs:
             "README.MD"
             "CONTRIBUTING.md"
           )
-          
+
           MISSING=0
           for file in "${FILES[@]}"; do
             if [ -f "$file" ]; then
@@ -89,13 +89,13 @@ jobs:
               MISSING=$((MISSING + 1))
             fi
           done
-          
+
           if [ $MISSING -gt 0 ]; then
             echo "⚠ Warning: $MISSING critical file(s) missing"
           else
             echo "✓ All critical governance files present"
           fi
-      
+
       - name: Validate JSON files (W3C compliance)
         run: |
           echo "Validating JSON files for W3C compliance..."
@@ -111,16 +111,16 @@ jobs:
             echo "jq not installed, skipping JSON validation"
           fi
         continue-on-error: true
-      
+
       - name: Check security controls (NIST 800-53)
         run: |
           echo "Checking security controls alignment..."
-          
+
           # Check for security-related files and configurations
           echo "Security files:"
           [ -f "SECURITY_SUMMARY.md" ] && echo "  ✓ SECURITY_SUMMARY.md" || echo "  ⚠ SECURITY_SUMMARY.md (recommended)"
           [ -f ".github/workflows/codeql.yml" ] && echo "  ✓ CodeQL workflow" || echo "  ⚠ CodeQL workflow (recommended)"
-          
+
           # Check for sensitive files that shouldn't be committed
           echo "Checking for sensitive files..."
           SENSITIVE_PATTERNS=("*.key" "*.pem" ".env" "secrets.txt" "private.*")
@@ -134,39 +134,39 @@ jobs:
           if [ "$FOUND_SENSITIVE" = false ]; then
             echo "  ✓ No obvious sensitive files found"
           fi
-      
+
       - name: Quality metrics check (ISO 9001)
         run: |
           echo "Checking quality management metrics..."
-          
+
           # Check for test directory
           [ -d "tests" ] && echo "✓ Test directory present" || echo "⚠ Test directory recommended"
-          
+
           # Check for CI/CD
           [ -d ".github/workflows" ] && echo "✓ CI/CD workflows present" || echo "⚠ CI/CD workflows recommended"
-          
+
           # Count workflow files
           WORKFLOW_COUNT=$(find .github/workflows -name "*.yml" 2>/dev/null | wc -l)
           echo "✓ Found $WORKFLOW_COUNT workflow file(s)"
-      
+
       - name: Ethics framework check (Ethica[8])
         run: |
           echo "Verifying Ethica[8] framework implementation..."
-          
+
           # Check for ethics mentions in documentation
           if grep -rq "ethic\|privacy\|transparency\|accountability" *.md 2>/dev/null; then
             echo "✓ Ethics principles referenced in documentation"
           else
             echo "⚠ Ethics documentation recommended"
           fi
-          
+
           # Check for license file
           if [ -f "LICENSE" ]; then
             echo "✓ License file present (legal compliance)"
           else
             echo "⚠ License file recommended"
           fi
-      
+
       - name: Generate compliance summary
         if: always()
         run: |
@@ -184,7 +184,7 @@ jobs:
           echo ""
           echo "Status: Governance validation completed"
           echo "==================================================================="
-      
+
       - name: Upload governance report
         if: always()
         uses: actions/upload-artifact@v4

@@ -6,7 +6,8 @@
 # Purpose: Validate compliance with global governance standards
 ################################################################################
 
-set -e
+# Don't exit on error - we want to collect all validation results
+set +e
 
 # Color codes for output
 RED='\033[0;31m'
