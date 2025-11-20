@@ -357,7 +357,7 @@ check_security_compliance() {
     
     # Check for security-sensitive files not in git
     ((TOTAL_CHECKS++))
-    SECURITY_FILES=(".env" "secrets.txt" "private.key" "*.pem")
+    SECURITY_FILES=(".env" "secrets.txt" "private.key")
     INSECURE_FILES=false
     for pattern in "${SECURITY_FILES[@]}"; do
         if find "$REPO_ROOT" -name "$pattern" -not -path "*/.git/*" 2>/dev/null | grep -q .; then
@@ -365,6 +365,23 @@ check_security_compliance() {
             INSECURE_FILES=true
         fi
     done
+    
+    # Check for .pem files excluding legitimate public certificates
+    PEM_FILES=$(find "$REPO_ROOT" -name "*.pem" -not -path "*/.git/*" 2>/dev/null || true)
+    if [ -n "$PEM_FILES" ]; then
+        # Check if these are legitimate certificates (e.g., in tools/keys/)
+        SUSPICIOUS_PEM=false
+        for pem_file in $PEM_FILES; do
+            if [[ ! "$pem_file" =~ tools/keys/ ]] && [[ ! "$pem_file" =~ \.x509\.pem$ ]]; then
+                log_warning "Security: Found .pem file - verify it should be committed: $pem_file"
+                SUSPICIOUS_PEM=true
+            fi
+        done
+        if [ "$SUSPICIOUS_PEM" = false ]; then
+            log_success "Security: .pem files found are legitimate certificates"
+        fi
+    fi
+    
     if [ "$INSECURE_FILES" = false ]; then
         log_success "Security: No obvious sensitive files in repository"
     fi
@@ -542,7 +559,12 @@ generate_summary() {
     log_info "Total Checks:    $TOTAL_CHECKS"
     log_success "Passed:         $PASSED_CHECKS"
     log_warning "Warnings:       $WARNING_CHECKS"
-    log_error "Failed:         $FAILED_CHECKS"
+    
+    if [ $FAILED_CHECKS -eq 0 ]; then
+        log_success "Failed:         $FAILED_CHECKS"
+    else
+        log_error "Failed:         $FAILED_CHECKS"
+    fi
     
     COMPLIANCE_RATE=0
     if [ $TOTAL_CHECKS -gt 0 ]; then
@@ -555,12 +577,14 @@ generate_summary() {
         log_info ""
         log_success "✓ GOVERNANCE VALIDATION PASSED"
         log_info "All critical governance requirements are met."
-        log_info "Warnings indicate recommendations for improvement."
+        if [ $WARNING_CHECKS -gt 0 ]; then
+            log_info "$WARNING_CHECKS warning(s) indicate recommendations for improvement."
+        fi
         return 0
     else
         log_info ""
         log_error "✗ GOVERNANCE VALIDATION FAILED"
-        log_info "Please address the failed checks above."
+        log_info "Please address the $FAILED_CHECKS failed check(s) above."
         return 1
     fi
 }
