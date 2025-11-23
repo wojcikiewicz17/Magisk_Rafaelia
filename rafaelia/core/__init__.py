@@ -23,8 +23,69 @@ Philosophy: VAZIO → VERBO → CHEIO → RETRO
 
 from rafaelia.core.tt_cross import TTCrossApproximation
 from rafaelia.core.tt_update import TTLocalUpdate
+from rafaelia.core.matrix_ops import (
+    MatrixOperations,
+    TensorTrainMatrix,
+    AdaptiveMatrixOperations,
+)
+from rafaelia.core.authorship import (
+    RafaeliaAuthorship,
+    Author,
+    Publication,
+    LegalFramework,
+)
+from rafaelia.core.interop import (
+    Version,
+    VersionCompatibility,
+    VersionRegistry,
+    PlatformCapabilities,
+    InteroperabilityLayer,
+    ApplicabilityScore,
+    ApplicabilityChecker,
+    MitigationStrategy,
+)
+from rafaelia.core.cognitive import (
+    ComputationPattern,
+    ExecutionProfile,
+    PatternRecognizer,
+    OptimizationObjective,
+    MultiObjectiveOptimizer,
+    AdaptiveTuner,
+    FractalOptimizer,
+    ResourceLoad,
+    CognitiveLoadBalancer,
+)
 
 __all__ = [
+    # Original TT algorithms
     'TTCrossApproximation',
     'TTLocalUpdate',
+    # Low-level matrix operations
+    'MatrixOperations',
+    'TensorTrainMatrix',
+    'AdaptiveMatrixOperations',
+    # Authorship and legal
+    'RafaeliaAuthorship',
+    'Author',
+    'Publication',
+    'LegalFramework',
+    # Interoperability and versioning
+    'Version',
+    'VersionCompatibility',
+    'VersionRegistry',
+    'PlatformCapabilities',
+    'InteroperabilityLayer',
+    'ApplicabilityScore',
+    'ApplicabilityChecker',
+    'MitigationStrategy',
+    # Cognitive optimization
+    'ComputationPattern',
+    'ExecutionProfile',
+    'PatternRecognizer',
+    'OptimizationObjective',
+    'MultiObjectiveOptimizer',
+    'AdaptiveTuner',
+    'FractalOptimizer',
+    'ResourceLoad',
+    'CognitiveLoadBalancer',
 ]
