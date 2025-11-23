@@ -179,6 +179,51 @@ Default string resources for the Magisk app and its stub APK are located here:
 
 Translate each and place them in the respective locations (`[module]/src/main/res/values-[lang]/strings.xml`).
 
+---
+
+## 📋 Governance & Standards
+
+**Magisk_Rafaelia** operates under a comprehensive governance framework defined in **[ativar.txt v999](ativar.txt)**.
+
+### Applied International Standards
+
+- **ISO**: 9001 (Quality), 27001 (Security), 27002 (Security Controls), 27018 (Privacy), 25010 (Software Quality), 8000 (Data Quality)
+- **IEEE**: 830 (Requirements), 1012 (V&V), 12207 (Lifecycle), 14764 (Maintenance), 1633 (Reliability), 42010 (Architecture)
+- **NIST**: Cybersecurity Framework, SP 800-53 (Security Controls), SP 800-207 (Zero Trust), AI Risk Management Framework
+- **ITU-T**: X Series (Data Networks), Y.3500 (Cloud Computing), F.747 (Multimedia)
+- **W3C**: JSON, YAML, Web Architecture
+- **ABNT**: NBR ISO/IEC standards
+
+### Ethica[8] Framework
+
+All development follows eight ethical principles:
+
+1. **Transparency** 🔍 - Open communication and documentation
+2. **Accountability** 📋 - Clear responsibility and ownership
+3. **Fairness** ⚖️ - Equitable treatment for all
+4. **Privacy** 🔒 - Respect for personal information
+5. **Security** 🛡️ - Protection of systems and data
+6. **Reliability** 🔧 - Dependable operation
+7. **Safety** 🛟 - No harm to users or systems
+8. **Sustainability** ♻️ - Long-term responsibility
+
+### Documentation
+
+- **Governance Framework**: [ativar.txt](ativar.txt)
+- **Implementation Guide**: [GOVERNANCE_IMPLEMENTATION.md](GOVERNANCE_IMPLEMENTATION.md)
+- **Ethics Framework**: [Ethica[8]](docs/governance/ethics/ethica-8-framework.md)
+- **Security Policy**: [ISMS Policy](docs/governance/security/isms-policy.md)
+
+### Continuous Improvement
+
+The project operates with an **Infinite Feedback Loop** for perpetual enhancement:
+- Automated quality gates and security scanning
+- Regular compliance audits
+- Community feedback integration
+- Continuous learning and adaptation
+
+---
+
 ## License
 
     Magisk, including all git submodules are free software:

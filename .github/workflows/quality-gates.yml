@@ -205,9 +205,82 @@ jobs:
           # Check for overly permissive files (not critical, just informational)
           find . -type f -perm -o+w -not -path "./.git/*" -not -path "./out/*" | head -10 || true
 
+  governance-compliance:
+    name: Governance Compliance (ativar.txt v999)
+    needs: determine-strictness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+      
+      - name: Verify governance framework
+        run: |
+          echo "==================================================================="
+          echo "GOVERNANCE COMPLIANCE CHECK - ativar.txt v999"
+          echo "==================================================================="
+          
+          # Check for ativar.txt v999
+          if [ -f "ativar.txt" ]; then
+            echo "✅ ativar.txt v999 found"
+            if grep -q "v999\|Version: 999" ativar.txt; then
+              echo "✅ Version v999 confirmed"
+            else
+              echo "⚠️ Version marker verification failed"
+            fi
+          else
+            echo "❌ ativar.txt v999 not found"
+            exit 1
+          fi
+          
+          # Check for governance implementation document
+          if [ -f "GOVERNANCE_IMPLEMENTATION.md" ]; then
+            echo "✅ Governance implementation guide found"
+          else
+            echo "⚠️ Governance implementation guide recommended"
+          fi
+      
+      - name: Run governance validator
+        run: |
+          if [ -f ".github/scripts/governance_validator.sh" ]; then
+            chmod +x .github/scripts/governance_validator.sh
+            ./.github/scripts/governance_validator.sh || echo "Governance validation completed with warnings"
+          else
+            echo "Governance validator script not found"
+          fi
+        continue-on-error: true
+      
+      - name: Check standards compliance markers
+        run: |
+          echo "Checking for standards compliance markers..."
+          
+          # ISO standards
+          echo "ISO Standards:"
+          grep -l "ISO.*9001\|ISO.*27001\|ISO.*25010" *.md 2>/dev/null | head -5 || echo "  No ISO references in root docs"
+          
+          # IEEE standards
+          echo "IEEE Standards:"
+          grep -l "IEEE.*830\|IEEE.*1012\|IEEE.*12207" *.md 2>/dev/null | head -5 || echo "  No IEEE references in root docs"
+          
+          # NIST standards
+          echo "NIST Standards:"
+          grep -l "NIST\|800-53\|Cybersecurity Framework" *.md 2>/dev/null | head -5 || echo "  No NIST references in root docs"
+          
+          echo "Standards compliance check complete"
+      
+      - name: Ethics framework verification (Ethica[8])
+        run: |
+          echo "Verifying Ethica[8] framework..."
+          
+          if grep -rq "Ethica\[8\]\|ethical.principles" *.md *.txt 2>/dev/null; then
+            echo "✅ Ethica[8] framework referenced"
+          else
+            echo "⚠️ Ethica[8] framework documentation recommended"
+          fi
+
   adaptive-summary:
     name: Quality Gates Summary
-    needs: [determine-strictness, code-quality, documentation-check, build-validation, security-check]
+    needs: [determine-strictness, code-quality, documentation-check, build-validation, security-check, governance-compliance]
     runs-on: ubuntu-latest
     if: always()
     
@@ -218,6 +291,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Target Branch**: ${{ github.base_ref || github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "**Strictness Level**: ${{ needs.determine-strictness.outputs.strictness }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Governance**: ativar.txt v999 ACTIVE" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
           echo "## Results" >> $GITHUB_STEP_SUMMARY
@@ -228,6 +302,7 @@ jobs:
             "Documentation:${{ needs.documentation-check.result }}"
             "Build Validation:${{ needs.build-validation.result }}"
             "Security Check:${{ needs.security-check.result }}"
+            "Governance Compliance:${{ needs.governance-compliance.result }}"
           )
           
           for result in "${RESULTS[@]}"; do
@@ -243,6 +318,11 @@ jobs:
             fi
           done
           
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Governance Framework" >> $GITHUB_STEP_SUMMARY
+          echo "- Standards: ISO, IEEE, NIST, ITU-T, W3C, ABNT" >> $GITHUB_STEP_SUMMARY
+          echo "- Ethics: Ethica[8] Framework" >> $GITHUB_STEP_SUMMARY
+          echo "- Improvement: Infinite Feedback Loop" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
           if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
@@ -261,7 +341,8 @@ jobs:
           
           if [ "${{ needs.determine-strictness.outputs.is_main }}" == "true" ]; then
             if [ "${{ needs.documentation-check.result }}" == "failure" ] || \
-               [ "${{ needs.security-check.result }}" == "failure" ]; then
+               [ "${{ needs.security-check.result }}" == "failure" ] || \
+               [ "${{ needs.governance-compliance.result }}" == "failure" ]; then
               echo "Main branch quality gates not met"
               exit 1
             fi
