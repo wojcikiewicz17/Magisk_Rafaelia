@@ -72,6 +72,18 @@ from rafaelia.core.cognitive import (
     ResourceLoad,
     CognitiveLoadBalancer,
 )
+from rafaelia.core.formulas import (
+    RAFAELIAFormulas,
+    RAFAELIAFormulasAdvanced,
+    CognitiveCycleEngine,
+    CognitiveState,
+    RetroalimentacaoState,
+    FORMULA_INDEX,
+    PHI,
+    SQRT_3_2,
+    BITRAF64,
+    R_CORR,
+)
 
 __all__ = [
     # Original TT algorithms
@@ -105,4 +117,15 @@ __all__ = [
     'FractalOptimizer',
     'ResourceLoad',
     'CognitiveLoadBalancer',
+    # RAFAELIA Formulas (102 formulas)
+    'RAFAELIAFormulas',
+    'RAFAELIAFormulasAdvanced',
+    'CognitiveCycleEngine',
+    'CognitiveState',
+    'RetroalimentacaoState',
+    'FORMULA_INDEX',
+    'PHI',
+    'SQRT_3_2',
+    'BITRAF64',
+    'R_CORR',
 ]
