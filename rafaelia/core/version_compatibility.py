@@ -192,8 +192,18 @@ class VersionCompatibilityChecker:
             try:
                 with open(config_file, 'r') as f:
                     data = json.load(f)
-                    # Convert string keys to tuples
-                    return {tuple(map(int, k.split(','))): v for k, v in data.items()}
+                    # Convert string keys to tuples with error handling
+                    result = {}
+                    for k, v in data.items():
+                        try:
+                            key_parts = k.split(',')
+                            if len(key_parts) == 2:
+                                result[tuple(map(int, key_parts))] = v
+                            else:
+                                self.logger.warning(f"Skipping malformed key: {k}")
+                        except ValueError as e:
+                            self.logger.warning(f"Could not parse key '{k}': {e}")
+                    return result
             except (json.JSONDecodeError, IOError) as e:
                 self.logger.warning(f"Could not load breaking changes config: {e}")
         

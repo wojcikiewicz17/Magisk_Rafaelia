@@ -432,9 +432,8 @@ class LatencyOptimizer:
         elif baseline_latency < 10:  # Very low latency (<10ms)
             optimal_buffer_size = 4096   # 4KB for very fast systems
         
-        # Apply optimization by setting environment variable for subprocess
+        # Apply optimization by setting environment variables for subprocess
         # This affects child processes spawned by the build system
-        # Note: We use explicit RAFAELIA variables for clarity
         os.environ['RAFAELIA_BUFFERING_ENABLED'] = '1'
         os.environ['RAFAELIA_IO_BUFFER_SIZE'] = str(optimal_buffer_size)
         
