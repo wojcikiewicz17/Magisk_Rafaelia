@@ -17,6 +17,19 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 """
+Performance Optimizer - Root-level module for backward compatibility
+
+NOTE: This is a compatibility shim for legacy code. The canonical implementation
+is in rafaelia/governance/performance_optimizer.py. This file is maintained
+for backward compatibility with existing scripts that import from the root level.
+
+For new code, please use:
+    from rafaelia.governance.performance_optimizer import LatencyOptimizer
+
+This duplication will be removed in a future major version (v3.0.0).
+"""
+
+"""
 PERFORMANCE_OPTIMIZER.PY - Performance, Latency and Footprint Optimization
 
 Comprehensive performance optimization and analysis system for Python applications,

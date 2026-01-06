@@ -247,7 +247,24 @@ if [ -n "$HMAC" ] && [ "$HMAC" != "null" ]; then
     # Use OpenSSL for HMAC-SHA256 computation
     # Read key securely without exposing in process list
     if command -v openssl >/dev/null 2>&1; then
-      COMPUTED_HMAC=$(openssl dgst -sha256 -mac HMAC -macopt "file:$HMAC_KEY_FILE" -binary "$BACKUP_PATH" | base64)
+      # Validate key file format (should be readable and non-empty)
+      if [ ! -r "$HMAC_KEY_FILE" ]; then
+        echo "✗ HMAC key file not readable: ${HMAC_KEY_FILE}" >&2
+        exit 6
+      fi
+      
+      if [ ! -s "$HMAC_KEY_FILE" ]; then
+        echo "✗ HMAC key file is empty: ${HMAC_KEY_FILE}" >&2
+        exit 6
+      fi
+      
+      # Compute HMAC and check for errors
+      COMPUTED_HMAC=$(openssl dgst -sha256 -mac HMAC -macopt "file:$HMAC_KEY_FILE" -binary "$BACKUP_PATH" 2>/dev/null | base64)
+      
+      if [ $? -ne 0 ] || [ -z "$COMPUTED_HMAC" ]; then
+        echo "✗ HMAC computation failed - check key file format" >&2
+        exit 6
+      fi
       
       # Compare computed HMAC with manifest HMAC
       if [ "$COMPUTED_HMAC" = "$HMAC" ]; then

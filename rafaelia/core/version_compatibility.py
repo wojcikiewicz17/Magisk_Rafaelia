@@ -281,11 +281,14 @@ class VersionCompatibilityChecker:
             # Patch version change - fully compatible
             level = CompatibilityLevel.FULLY_COMPATIBLE
         
-        # Check for deprecation warnings
+        # Check for deprecation warnings (with error handling)
         for dep_version, dep_list in self.deprecations.items():
-            dep_ver = SemanticVersion.parse(dep_version)
-            if from_ver < dep_ver <= to_ver:
-                warnings.extend([f"Deprecated: {dep}" for dep in dep_list])
+            try:
+                dep_ver = SemanticVersion.parse(dep_version)
+                if from_ver < dep_ver <= to_ver:
+                    warnings.extend([f"Deprecated: {dep}" for dep in dep_list])
+            except ValueError as e:
+                self.logger.warning(f"Could not parse deprecation version '{dep_version}': {e}")
         
         # Generate migration steps for major transitions
         if level in [CompatibilityLevel.MIGRATION_REQUIRED, CompatibilityLevel.BREAKING_CHANGE]:
