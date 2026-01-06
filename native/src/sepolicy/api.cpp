@@ -34,6 +34,7 @@
 #include <base.hpp>
 
 #include "include/sepolicy.hpp"
+#include "policy-rs.hpp"
 
 using Str = rust::Str;
 using StrVec = rust::Vec<rust::Str>;

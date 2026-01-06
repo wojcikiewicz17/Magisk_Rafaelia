@@ -31,6 +31,8 @@
  * ---
  */
 
+#pragma once
+
 struct mtk_hdr {
     uint32_t magic;         /* MTK magic */
     uint32_t size;          /* Size of the content */
