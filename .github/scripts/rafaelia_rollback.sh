@@ -234,11 +234,65 @@ if [ "$FORCE" != "--force" ]; then
   fi
 fi
 
-# Optional: verify HMAC locally if verification key available
-# Note: HMAC verification is not implemented in this version but the infrastructure
-# is in place for future security enhancements. HMAC verification would ensure
-# the backup image hasn't been tampered with.
-# TODO: Implement HMAC verification when key management system is in place
+# Verify HMAC if verification key available
+# HMAC verification ensures the backup image hasn't been tampered with
+if [ -n "$HMAC" ] && [ "$HMAC" != "null" ]; then
+  # Check if verification key is available in environment or secure keystore
+  HMAC_KEY_FILE="${RAFAELIA_KEY_DIR:-$HOME/.rafaelia/keys}/hmac_verification.key"
+  
+  if [ -f "$HMAC_KEY_FILE" ]; then
+    echo "Verifying backup integrity with HMAC..."
+    
+    # Calculate HMAC of the backup file
+    # Use OpenSSL for HMAC-SHA256 computation
+    # Read key securely without exposing in process list
+    if command -v openssl >/dev/null 2>&1; then
+      # Validate key file format (should be readable and non-empty)
+      if [ ! -r "$HMAC_KEY_FILE" ]; then
+        echo "✗ HMAC key file not readable: ${HMAC_KEY_FILE}" >&2
+        exit 6
+      fi
+      
+      if [ ! -s "$HMAC_KEY_FILE" ]; then
+        echo "✗ HMAC key file is empty: ${HMAC_KEY_FILE}" >&2
+        exit 6
+      fi
+      
+      # Compute HMAC and check for errors
+      COMPUTED_HMAC=$(openssl dgst -sha256 -mac HMAC -macopt "file:$HMAC_KEY_FILE" -binary "$BACKUP_PATH" 2>/dev/null | base64)
+      
+      if [ $? -ne 0 ] || [ -z "$COMPUTED_HMAC" ]; then
+        echo "✗ HMAC computation failed - check key file format" >&2
+        exit 6
+      fi
+      
+      # Compare computed HMAC with manifest HMAC
+      if [ "$COMPUTED_HMAC" = "$HMAC" ]; then
+        echo "✓ HMAC verification successful - backup integrity confirmed"
+      else
+        echo "✗ HMAC verification FAILED - backup may be corrupted or tampered" >&2
+        echo "  Expected: ${HMAC}" >&2
+        echo "  Computed: ${COMPUTED_HMAC}" >&2
+        
+        # Abort unless --force flag is provided
+        if [ "$FORCE" != "--force" ]; then
+          echo "Aborting rollback due to integrity check failure." >&2
+          echo "Use --force to override (NOT RECOMMENDED)" >&2
+          exit 5
+        else
+          echo "WARNING: Proceeding despite HMAC failure due to --force flag"
+        fi
+      fi
+    else
+      echo "Warning: OpenSSL not available, skipping HMAC verification"
+    fi
+  else
+    echo "Note: HMAC key not found at ${HMAC_KEY_FILE}, skipping verification"
+    echo "To enable HMAC verification, create a verification key file"
+  fi
+else
+  echo "Note: No HMAC in manifest, skipping integrity verification"
+fi
 
 # Check if fastboot is available in PATH
 if ! command -v fastboot >/dev/null 2>&1; then

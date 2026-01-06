@@ -1,0 +1,8 @@
+{
+  "1.5.0": [
+    "Legacy telemetry API (use v2)"
+  ],
+  "2.0.0": [
+    "Old config format (use YAML)"
+  ]
+}

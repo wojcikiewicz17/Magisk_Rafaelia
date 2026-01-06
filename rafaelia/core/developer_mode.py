@@ -383,7 +383,23 @@ class DeveloperModeManager:
         Security: Uses secure consent verification to prevent exploitation
         """
         # Check if Android Developer Options are enabled
-        # This is a placeholder - actual implementation would check Android settings
+        # Check Android system property for developer mode status
+        android_dev_enabled = False
+        try:
+            # Try to read Android system property (available in Android environment)
+            import subprocess
+            result = subprocess.run(
+                ['getprop', 'ro.debuggable'],
+                capture_output=True,
+                text=True,
+                timeout=2
+            )
+            android_dev_enabled = result.stdout.strip() == '1'
+        except (FileNotFoundError, subprocess.TimeoutExpired, Exception):
+            # Not in Android environment or getprop not available
+            # Fall back to environment variable or consent file check
+            android_dev_enabled = os.getenv('RAFAELIA_DEV_MODE', '0') == '1'
+        
         try:
             # Use secure application-specific directory for consent file
             # NOT a world-writable location like /tmp
@@ -398,7 +414,8 @@ class DeveloperModeManager:
                 stat_info = os.stat(consent_file)
                 # Check that file is not writable by group or others (mask 0o077)
                 if stat_info.st_mode & 0o077 == 0:
-                    return True
+                    # Both Android developer mode AND explicit consent required
+                    return android_dev_enabled
                     
             return False
         except Exception:
