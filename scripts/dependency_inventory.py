@@ -22,7 +22,14 @@ import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Set, Optional
-import toml
+
+# Handle missing toml module gracefully
+try:
+    import toml
+    HAS_TOML = True
+except ImportError:
+    HAS_TOML = False
+    print("⚠️  Warning: toml module not available. Cargo.toml parsing will be limited.")
 
 
 class DependencyInventory:
@@ -42,6 +49,10 @@ class DependencyInventory:
         """Analyze Rust dependencies from Cargo.toml files"""
         print("📦 Analyzing Rust dependencies...")
         rust_deps = {}
+        
+        if not HAS_TOML:
+            print("  Skipping detailed Cargo.toml analysis (toml module not available)")
+            return rust_deps
         
         cargo_files = list(self.repo_root.rglob('Cargo.toml'))
         
