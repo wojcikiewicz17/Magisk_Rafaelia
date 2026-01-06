@@ -245,8 +245,9 @@ if [ -n "$HMAC" ] && [ "$HMAC" != "null" ]; then
     
     # Calculate HMAC of the backup file
     # Use OpenSSL for HMAC-SHA256 computation
+    # Read key securely without exposing in process list
     if command -v openssl >/dev/null 2>&1; then
-      COMPUTED_HMAC=$(openssl dgst -sha256 -hmac "$(cat "$HMAC_KEY_FILE")" -binary "$BACKUP_PATH" | base64)
+      COMPUTED_HMAC=$(openssl dgst -sha256 -mac HMAC -macopt "file:$HMAC_KEY_FILE" -binary "$BACKUP_PATH" | base64)
       
       # Compare computed HMAC with manifest HMAC
       if [ "$COMPUTED_HMAC" = "$HMAC" ]; then

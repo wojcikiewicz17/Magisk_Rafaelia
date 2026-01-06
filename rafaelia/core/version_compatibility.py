@@ -46,6 +46,12 @@ from enum import Enum
 from pathlib import Path
 
 
+# Module-level constants
+DEFAULT_VERSION = "1.0.0"
+BREAKING_CHANGES_CONFIG = "version_breaking_changes.json"
+DEPRECATIONS_CONFIG = "version_deprecations.json"
+
+
 class CompatibilityLevel(Enum):
     """Compatibility levels between versions."""
     FULLY_COMPATIBLE = "fully_compatible"      # No changes needed
@@ -168,18 +174,47 @@ class VersionCompatibilityChecker:
     - Deprecation warnings
     """
     
-    def __init__(self):
+    def __init__(self, config_dir: Optional[Path] = None):
         """Initialize the compatibility checker."""
         self.logger = logging.getLogger("RAFAELIA.VersionCompatibility")
+        self.config_dir = config_dir or Path(__file__).parent.parent / "config"
         
-        # Define breaking changes for each major version
-        self.breaking_changes = {
+        # Load breaking changes from config file or use defaults
+        self.breaking_changes = self._load_breaking_changes()
+        
+        # Load deprecations from config file or use defaults
+        self.deprecations = self._load_deprecations()
+    
+    def _load_breaking_changes(self) -> Dict:
+        """Load breaking changes from config file or use defaults."""
+        config_file = self.config_dir / BREAKING_CHANGES_CONFIG
+        if config_file.exists():
+            try:
+                with open(config_file, 'r') as f:
+                    data = json.load(f)
+                    # Convert string keys to tuples
+                    return {tuple(map(int, k.split(','))): v for k, v in data.items()}
+            except (json.JSONDecodeError, IOError) as e:
+                self.logger.warning(f"Could not load breaking changes config: {e}")
+        
+        # Default breaking changes
+        return {
             (1, 2): ["API endpoint structure changed", "Config format updated"],
             (2, 3): ["State matrix expanded to 1008 states", "Audit log format v3"],
         }
+    
+    def _load_deprecations(self) -> Dict:
+        """Load deprecations from config file or use defaults."""
+        config_file = self.config_dir / DEPRECATIONS_CONFIG
+        if config_file.exists():
+            try:
+                with open(config_file, 'r') as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError) as e:
+                self.logger.warning(f"Could not load deprecations config: {e}")
         
-        # Define deprecations
-        self.deprecations = {
+        # Default deprecations
+        return {
             "1.5.0": ["Legacy telemetry API (use v2)"],
             "2.0.0": ["Old config format (use YAML)"],
         }
@@ -336,8 +371,8 @@ class VersionCompatibilityChecker:
                 except (json.JSONDecodeError, IOError) as e:
                     self.logger.warning(f"Could not read version from {path}: {e}")
         
-        # Default version if not found
-        return "1.0.0"
+        # Return default version if not found
+        return DEFAULT_VERSION
 
 
 # Module-level convenience functions

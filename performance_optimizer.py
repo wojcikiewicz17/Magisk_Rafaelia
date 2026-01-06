@@ -434,7 +434,9 @@ class LatencyOptimizer:
         
         # Apply optimization by setting environment variable for subprocess
         # This affects child processes spawned by the build system
-        os.environ['PYTHONUNBUFFERED'] = '0'
+        # Note: PYTHONUNBUFFERED='0' enables buffering (opposite of typical usage)
+        # We use explicit RAFAELIA variable for clarity
+        os.environ['RAFAELIA_BUFFERING_ENABLED'] = '1'
         os.environ['RAFAELIA_IO_BUFFER_SIZE'] = str(optimal_buffer_size)
         
         # Calculate improvement percentage based on buffer size change

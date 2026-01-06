@@ -1,0 +1,10 @@
+{
+  "1,2": [
+    "API endpoint structure changed",
+    "Config format updated"
+  ],
+  "2,3": [
+    "State matrix expanded to 1008 states",
+    "Audit log format v3"
+  ]
+}
