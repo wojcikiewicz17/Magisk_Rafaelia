@@ -1,4 +1,3 @@
-```python
 #!/usr/bin/env python3
 # retro_feed.py
 # Minimal analyzer that inspects a snapshot zip produced by bug_snapshot.sh

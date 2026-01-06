@@ -32,6 +32,7 @@
  */
 
 #include "include/sepolicy.hpp"
+#include "policy-rs.hpp"
 
 #include <sys/types.h>
 #include <sys/stat.h>

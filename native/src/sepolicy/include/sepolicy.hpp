@@ -31,5 +31,20 @@
  * ---
  */
 
-#define SELINUX_MNT         "/sys/fs/selinux"
-#define SELINUX_VERSION     SELINUX_MNT "/policyvers"
+#pragma once
+
+#include <sepol/policydb/policydb.h>
+#include <sepol/policydb/services.h>
+#include <sepol/policydb/expand.h>
+#include <sepol/policydb/conditional.h>
+#include <sepol/policydb/avtab.h>
+#include <sepol/policydb/hashtab.h>
+
+#define SELINUX_MNT          "/sys/fs/selinux"
+#define SELINUX_VERSION      SELINUX_MNT "/policyvers"
+#define PLAT_POLICY_DIR      "/system/etc/selinux/"
+#define VEND_POLICY_DIR      "/vendor/etc/selinux/"
+#define PROD_POLICY_DIR      "/product/etc/selinux/"
+#define ODM_POLICY_DIR       "/odm/etc/selinux/"
+#define SYSEXT_POLICY_DIR    "/system_ext/etc/selinux/"
+#define SPLIT_PLAT_CIL       "/system/etc/selinux/plat_sepolicy.cil"

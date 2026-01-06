@@ -31,7 +31,14 @@
  * ---
  */
 
+#include <time.h>
+#include <jni.h>
+
 #define ZLOGV(...) (void*)0
+#define ZLOGD(...) LOGD(__VA_ARGS__)
+#define ZLOGI(...) LOGI(__VA_ARGS__)
+#define ZLOGW(...) LOGW(__VA_ARGS__)
+#define ZLOGE(...) LOGE(__VA_ARGS__)
 
 void hook_entry();
 void hookJniNativeMethods(JNIEnv *env, const char *clz, JNINativeMethod *methods, int numMethods);

@@ -36,6 +36,7 @@
 #include <functional>
 
 #include <rust/cxx.h>
+#include "../../out/generated/flags.h"
 
 #define SQLITE_OPEN_READWRITE        0x00000002  /* Ok for sqlite3_open_v2() */
 #define SQLITE_OPEN_CREATE           0x00000004  /* Ok for sqlite3_open_v2() */
