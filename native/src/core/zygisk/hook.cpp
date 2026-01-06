@@ -42,6 +42,7 @@
 
 #include <base.hpp>
 #include <consts.hpp>
+#include <core.hpp>
 
 #include "zygisk.hpp"
 #include "module.hpp"

@@ -39,6 +39,7 @@
 #include <functional>
 
 #include <base.hpp>
+#include "../../out/generated/flags.h"
 
 #include "../core-rs.hpp"
 

@@ -48,6 +48,11 @@ constexpr const char *applet_names[] = { "su", "resetprop", nullptr };
 #define POST_FS_DATA_WAIT_TIME       40
 #define POST_FS_DATA_SCRIPT_MAX_TIME 35
 
+// Zygisk constants
+#define ZYGISK_API_VERSION  5
+#define NBPROP              "ro.dalvik.vm.native.bridge"
+#define ZYGISKLDR           "zygisk"
+
 // Unconstrained domain the daemon and root processes run in
 #define SEPOL_PROC_DOMAIN   "magisk"
 #define MAGISK_PROC_CON     "u:r:" SEPOL_PROC_DOMAIN ":s0"

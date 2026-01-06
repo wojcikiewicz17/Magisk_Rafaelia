@@ -409,6 +409,12 @@ def dump_flag_header():
     flag_txt += f'#define MAGISK_VERSION      "{config["version"]}"\n'
     flag_txt += f'#define MAGISK_VER_CODE     {config["versionCode"]}\n'
     flag_txt += f"#define MAGISK_DEBUG        {0 if args.release else 1}\n"
+    # Add required path macros for compilation
+    flag_txt += '#define DATABIN             "/data/adb/magisk"\n'
+    flag_txt += '#define SECURE_DIR          "/data/adb/magisk"\n'
+    flag_txt += '#define MODULEROOT          "/data/adb/modules"\n'
+    flag_txt += '#define MAGISKDB            "/data/adb/magisk.db"\n'
+    flag_txt += '#define JAVA_PACKAGE_NAME   "com.topjohnwu.magisk"\n'
 
     native_gen_path = Path("native", "out", "generated")
     native_gen_path.mkdir(mode=0o755, parents=True, exist_ok=True)
