@@ -1,0 +1,290 @@
+# Dependency Version Matrix
+# Defines allowed dependency versions and compatibility rules for Magisk_Rafaelia
+# This ensures interoperability and prevents version conflicts before CI
+
+version: "1.0"
+last_updated: "2026-01-06"
+
+# Native library dependencies (C/C++)
+native_dependencies:
+  libc:
+    min_version: "2.28"
+    max_version: "2.39"
+    recommended: "2.31"
+    validation_command: "ldd --version | head -n1"
+    critical: true
+    notes: "Standard C library - core system dependency"
+  
+  libm:
+    min_version: "2.28"
+    max_version: "2.39"
+    critical: true
+    notes: "Math library - usually bundled with libc"
+  
+  zlib:
+    min_version: "1.2.11"
+    max_version: "1.3.1"
+    recommended: "1.2.13"
+    validation_command: "pkg-config --modversion zlib"
+    critical: true
+    notes: "Compression library - consider vendoring or replacing"
+    baremetal_candidate: true
+  
+  xz:
+    min_version: "5.2.5"
+    max_version: "5.4.5"
+    recommended: "5.4.4"
+    validation_command: "xz --version | head -n1"
+    critical: true
+    notes: "XZ/LZMA compression - consider vendoring or replacing"
+    baremetal_candidate: true
+  
+  openssl:
+    min_version: "1.1.1"
+    max_version: "3.2.0"
+    recommended: "3.0.11"
+    validation_command: "openssl version"
+    critical: true
+    security_critical: true
+    notes: "Cryptography library - PRIORITY for custom implementation"
+    baremetal_candidate: true
+
+# Rust dependencies (from Cargo.toml)
+rust_dependencies:
+  libc:
+    version: "~0.2.150"  # Allow patch updates only
+    lock: false
+    critical: true
+    notes: "Rust bindings to libc"
+    baremetal_candidate: true  # Replace with direct syscalls
+  
+  nix:
+    version: "~0.27.1"
+    lock: false
+    critical: true
+    notes: "Unix system APIs"
+    baremetal_candidate: true  # Replace with direct syscalls
+  
+  sha3:
+    version: "=0.10.8"  # Pin exact version
+    lock: true
+    critical: true
+    security_critical: true
+    reason: "Cryptographic stability - exact version required"
+    baremetal_candidate: true  # Implement in pure Rust/ASM
+  
+  blake3:
+    version: "=1.5.0"  # Pin exact version
+    lock: true
+    critical: true
+    security_critical: true
+    reason: "Hash compatibility - exact version required"
+    baremetal_candidate: true  # Implement with SIMD optimizations
+  
+  serde:
+    version: "~1.0.193"
+    lock: false
+    critical: false
+    notes: "Serialization framework"
+  
+  bincode:
+    version: "~1.3.3"
+    lock: false
+    critical: false
+    notes: "Binary encoding"
+  
+  tokio:
+    version: "~1.35.0"
+    lock: false
+    critical: false
+    notes: "Async runtime - consider replacing with custom state machine"
+    baremetal_candidate: true
+  
+  clap:
+    version: "~4.4.11"
+    lock: false
+    critical: false
+    notes: "Command-line parsing"
+
+# Build-time dependencies
+build_dependencies:
+  android_ndk:
+    min_version: "r25c"
+    max_version: "r27"
+    recommended: "r26d"
+    critical: true
+    validation_command: "cat $ANDROID_NDK_ROOT/source.properties"
+    notes: "Android Native Development Kit"
+  
+  rust_toolchain:
+    min_version: "1.75.0"
+    max_version: "1.77.0"
+    recommended: "1.76.0"
+    critical: true
+    validation_command: "rustc --version"
+    notes: "Rust compiler and toolchain"
+  
+  python:
+    min_version: "3.8.0"
+    max_version: "3.12.99"
+    recommended: "3.11.0"
+    critical: true
+    validation_command: "python3 --version"
+    notes: "Python interpreter for build scripts"
+  
+  java:
+    min_version: "17"
+    max_version: "21"
+    recommended: "21"
+    critical: true
+    validation_command: "java -version"
+    notes: "Java Development Kit for Android builds"
+  
+  cmake:
+    min_version: "3.22.0"
+    max_version: "3.28.99"
+    recommended: "3.27.0"
+    critical: true
+    validation_command: "cmake --version"
+    notes: "Build system generator"
+
+# Compatibility rules
+compatibility_rules:
+  - name: "No floating Rust dependencies"
+    description: "All Cargo.toml must use ~ or = for version specifications"
+    check: "cargo_version_check"
+    level: "error"
+  
+  - name: "Security vulnerability scan"
+    description: "Run cargo audit to check for known vulnerabilities"
+    check: "cargo_audit"
+    level: "error"
+  
+  - name: "ABI compatibility"
+    description: "Ensure NDK API level matches minimum Android version"
+    check: "ndk_api_level"
+    level: "error"
+    parameters:
+      min_api_level: 21  # Android 5.0
+      target_api_level: 34  # Android 14
+  
+  - name: "Build reproducibility"
+    description: "Builds should be reproducible with same inputs"
+    check: "reproducible_build"
+    level: "warning"
+  
+  - name: "Code formatting"
+    description: "Code must be formatted according to project style"
+    check: "formatting"
+    level: "error"
+    tools:
+      - "cargo fmt"
+      - "black"
+  
+  - name: "Linting"
+    description: "Code must pass linter checks"
+    check: "linting"
+    level: "error"
+    tools:
+      - "cargo clippy"
+  
+  - name: "Unit tests"
+    description: "All unit tests must pass"
+    check: "unit_tests"
+    level: "error"
+
+# Baremetal transformation candidates
+# These dependencies should be eliminated or replaced with custom implementations
+baremetal_transformation:
+  priority_high:
+    - name: "Cryptographic libraries (sha3, blake3, openssl)"
+      reason: "Security critical, performance sensitive, large binary size"
+      strategy: "Implement pure Rust/Assembly with SIMD optimizations"
+      estimated_effort: "4-6 weeks"
+      binary_size_reduction: "5-8 MB"
+      performance_gain: "2-3x"
+    
+    - name: "Compression libraries (zlib, xz)"
+      reason: "Performance sensitive, external dependency risk"
+      strategy: "Vendor source or implement custom (LZ4, XZ)"
+      estimated_effort: "2-4 weeks"
+      binary_size_reduction: "2-4 MB"
+      performance_gain: "1.5-2x"
+    
+    - name: "System call wrappers (libc, nix)"
+      reason: "Unnecessary abstraction layer"
+      strategy: "Direct syscall interface in Rust/Assembly"
+      estimated_effort: "2-3 weeks"
+      binary_size_reduction: "1-2 MB"
+      performance_gain: "1.2-1.5x"
+  
+  priority_medium:
+    - name: "Async runtime (tokio)"
+      reason: "Large binary footprint, can be simplified"
+      strategy: "Custom state machine with epoll/kqueue"
+      estimated_effort: "3-5 weeks"
+      binary_size_reduction: "3-5 MB"
+    
+    - name: "Serialization (serde, bincode)"
+      reason: "Compile-time overhead, can be simplified"
+      strategy: "Manual binary parsing for critical paths"
+      estimated_effort: "1-2 weeks"
+      binary_size_reduction: "1-2 MB"
+
+# Target metrics after baremetal transformation
+target_metrics:
+  binary_size:
+    current: "15 MB"
+    target: "5-8 MB"
+    reduction: "50-70%"
+  
+  boot_time:
+    current: "200-400 ms"
+    target: "50-150 ms"
+    improvement: "2-4x"
+  
+  memory_footprint:
+    current: "10-20 MB RSS"
+    target: "2-5 MB RSS"
+    reduction: "50-75%"
+  
+  external_dependencies:
+    current: 25
+    target: 5
+    reduction: "80%"
+
+# Monitoring and alerts
+monitoring:
+  dependency_updates:
+    check_interval: "daily"
+    alert_on:
+      - "security_vulnerability"
+      - "breaking_change"
+      - "deprecation"
+  
+  version_drift:
+    check_interval: "weekly"
+    alert_on:
+      - "lockfile_mismatch"
+      - "version_conflict"
+      - "unpinned_dependency"
+  
+  compatibility:
+    check_interval: "on_commit"
+    alert_on:
+      - "abi_incompatibility"
+      - "api_breaking_change"
+      - "test_failure"
+
+# Notes
+notes: |
+  This dependency matrix is designed to:
+  1. Track all external dependencies
+  2. Enforce version compatibility
+  3. Identify baremetal transformation candidates
+  4. Prevent dependency-related CI failures
+  5. Guide the path toward self-contained repository
+  
+  All cryptographic dependencies MUST use exact version pinning (=x.y.z)
+  All system libraries should be tracked and eventually replaced
+  Priority should be given to eliminating runtime dependencies first

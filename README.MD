@@ -78,6 +78,7 @@ Some highlight features:
 - **Real-time Telemetry**: CPU, memory, I/O monitoring with anomaly detection ✓ **IMPLEMENTED**
 - **Security Hardening**: SELinux, seccomp, eBPF integration
 - **Ethical Computing**: Transparency, accountability, and safety guarantees
+- **Baremetal Optimization**: Hardware-specific SIMD, cache, and assembly optimizations ✓ **NEW**
 
 ### 🚀 Quick Start
 
@@ -104,6 +105,11 @@ See [Activation Guide](docs/ACTIVATION_GUIDE.md) for detailed instructions.
   - Livro II: Data Nexus (Interleaving, Permutation, Fractal Geometry)
   - Livro III: Software Abstraction (Yin-Yang model, CLIMEX, PLIMEX)
 - **[Toolkit Analysis](docs/RAFAELIA_TOOLKIT_ANALYSIS.md)** - ✓ **NEW!** retro_feed.py, bootctl, futility
+
+#### 🎯 Baremetal & Optimization (NEW!)
+- **[Baremetal Architecture Analysis](BAREMETAL_ARCHITECTURE_ANALYSIS.md)** - ✓ **NEW!** Pre-CI validation & transformation strategy
+- **[Hardware Optimization Guide](HARDWARE_OPTIMIZATION_GUIDE.md)** - ✓ **NEW!** SIMD, cache, assembly optimizations
+- **[Implementation Summary](BAREMETAL_IMPLEMENTATION_SUMMARY.md)** - ✓ **NEW!** Complete status & roadmap
 
 #### 🔧 Implementation & Operations
 - [Framework Overview](docs/RAFAELIA_FRAMEWORK.md) - Complete specification
