@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 umask 022
 
 OUTFD=$2

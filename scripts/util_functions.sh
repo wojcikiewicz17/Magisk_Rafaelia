@@ -196,6 +196,78 @@
 # 
 
 
+set -euo pipefail
+
+# Safety guard functions for destructive operations
+safe_rm_rf() {
+  local target="$1"
+  # Validate target is not empty
+  [ -z "$target" ] && { echo "ERROR: rm target is empty" >&2; exit 1; }
+  # Validate path length (minimum 5 characters)
+  [ ${#target} -lt 5 ] && { echo "ERROR: rm target path too short: $target" >&2; exit 1; }
+  # Reject dangerous paths
+  case "$target" in
+    /|.|..|/*bin|/*lib|/*etc|/*usr|/*system|/*vendor) 
+      echo "ERROR: Refusing to rm dangerous path: $target" >&2
+      exit 1
+      ;;
+  esac
+  # Validate target starts with expected safe prefix
+  case "$target" in
+    /data/*|/dev/*|/cache/*|/tmp/*|$TMPDIR/*|$NVBASE/*|$MODPATH/*)
+      rm -rf "$target"
+      ;;
+    *)
+      echo "ERROR: rm target not in safe directory: $target" >&2
+      exit 1
+      ;;
+  esac
+}
+
+safe_rm_f() {
+  local target="$1"
+  # Validate target is not empty
+  [ -z "$target" ] && { echo "ERROR: rm target is empty" >&2; exit 1; }
+  # Validate path length (minimum 5 characters for critical paths)
+  if [ ${#target} -lt 5 ]; then
+    case "$target" in
+      /data/*|/cache/*|/tmp/*|$TMPDIR/*) ;;
+      *)
+        echo "ERROR: rm target path too short: $target" >&2
+        exit 1
+        ;;
+    esac
+  fi
+  # Reject root and current directory
+  case "$target" in
+    /|.|..)
+      echo "ERROR: Refusing to rm dangerous path: $target" >&2
+      exit 1
+      ;;
+  esac
+  rm -f "$target"
+}
+
+safe_chmod() {
+  local mode="$1"
+  local target="$2"
+  # Validate target is not empty
+  [ -z "$target" ] && { echo "ERROR: chmod target is empty" >&2; exit 1; }
+  # Validate mode is not empty
+  [ -z "$mode" ] && { echo "ERROR: chmod mode is empty" >&2; exit 1; }
+  chmod "$mode" "$target"
+}
+
+safe_chown() {
+  local owner="$1"
+  local target="$2"
+  # Validate target is not empty
+  [ -z "$target" ] && { echo "ERROR: chown target is empty" >&2; exit 1; }
+  # Validate owner is not empty
+  [ -z "$owner" ] && { echo "ERROR: chown owner is empty" >&2; exit 1; }
+  chown "$owner" "$target"
+}
+
 ui_print() {
   if $BOOTMODE; then
     echo "$1"
@@ -250,8 +322,8 @@ is_mounted() {
 abort() {
   ui_print "$1"
   $BOOTMODE || recovery_cleanup
-  [ ! -z $MODPATH ] && rm -rf $MODPATH
-  rm -rf $TMPDIR
+  [ ! -z "$MODPATH" ] && [ -n "$MODPATH" ] && safe_rm_rf "$MODPATH"
+  [ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
   exit 1
 }
 
@@ -306,7 +378,7 @@ ensure_bb() {
   else
     abort "! Cannot find BusyBox"
   fi
-  chmod 755 $bb
+  [ -n "$bb" ] && safe_chmod 755 "$bb"
 
   # Busybox could be a script, make sure /system/bin/sh exists
   if [ ! -f /system/bin/sh ]; then
@@ -659,17 +731,33 @@ remove_system_su() {
     fi
     # More SuperSU, SuperUser & ROM su
     cd ..
-    rm -rf .pin bin/.ext etc/.installed_su_daemon etc/.has_su_daemon \
-    xbin/daemonsu xbin/su xbin/sugote xbin/sugote-mksh xbin/supolicy \
-    bin/app_process_init bin/su /cache/su lib/libsupol.so lib64/libsupol.so \
-    su.d etc/init.d/99SuperSUDaemon etc/install-recovery.sh /cache/install-recovery.sh \
-    .supersu /cache/.supersu /data/.supersu \
-    app/Superuser.apk app/SuperSU /cache/Superuser.apk
+    # Remove su files (relative paths within /system)
+    for item in .pin bin/.ext etc/.installed_su_daemon etc/.has_su_daemon \
+      xbin/daemonsu xbin/su xbin/sugote xbin/sugote-mksh xbin/supolicy \
+      bin/app_process_init bin/su lib/libsupol.so lib64/libsupol.so \
+      su.d etc/init.d/99SuperSUDaemon etc/install-recovery.sh \
+      .supersu app/Superuser.apk app/SuperSU; do
+      [ -e "$item" ] && rm -rf "$item"
+    done
+    # Remove cache files (absolute paths)
+    for item in /cache/su /cache/install-recovery.sh /cache/.supersu /cache/Superuser.apk; do
+      [ -e "$item" ] && safe_rm_rf "$item"
+    done
+    # Remove data files (absolute paths)
+    for item in /data/.supersu; do
+      [ -e "$item" ] && safe_rm_rf "$item"
+    done
   elif [ -f /cache/su.img -o -f /data/su.img -o -d /data/su -o -d /data/adb/su ]; then
     ui_print "- Removing systemless installed root"
     umount -l /su 2>/dev/null
-    rm -rf /cache/su.img /data/su.img /data/su /data/adb/su /data/adb/suhide \
-    /cache/.supersu /data/.supersu /cache/supersu_install /data/supersu_install
+    # Remove cache files
+    for item in /cache/su.img /cache/.supersu /cache/supersu_install; do
+      [ -e "$item" ] && safe_rm_rf "$item"
+    done
+    # Remove data files
+    for item in /data/su.img /data/su /data/adb/su /data/adb/suhide /data/.supersu /data/supersu_install; do
+      [ -e "$item" ] && safe_rm_rf "$item"
+    done
   fi
   cd $TMPDIR
 }
@@ -777,11 +865,11 @@ copy_preinit_files() {
 #################
 
 set_perm() {
-  chown $2:$3 $1 || return 1
-  chmod $4 $1 || return 1
+  [ -n "$1" ] && [ -n "$2" ] && [ -n "$3" ] && safe_chown "$2:$3" "$1" || return 1
+  [ -n "$1" ] && [ -n "$4" ] && safe_chmod "$4" "$1" || return 1
   local CON=$5
   [ -z $CON ] && CON=u:object_r:system_file:s0
-  chcon $CON $1 || return 1
+  chcon $CON "$1" || return 1
 }
 
 set_perm_recursive() {
@@ -795,8 +883,8 @@ set_perm_recursive() {
 
 mktouch() {
   mkdir -p ${1%/*} 2>/dev/null
-  [ -z $2 ] && touch $1 || echo $2 > $1
-  chmod 644 $1
+  [ -z $2 ] && touch "$1" || echo $2 > "$1"
+  [ -n "$1" ] && safe_chmod 644 "$1"
 }
 
 boot_actions() { return; }
@@ -818,10 +906,10 @@ set_default_perm() {
 
 # Require OUTFD, ZIPFILE to be set
 install_module() {
-  rm -rf $TMPDIR
-  mkdir -p $TMPDIR
-  chcon u:object_r:system_file:s0 $TMPDIR
-  cd $TMPDIR
+  [ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
+  mkdir -p "$TMPDIR"
+  chcon u:object_r:system_file:s0 "$TMPDIR"
+  cd "$TMPDIR"
 
   setup_flashable
   mount_partitions
@@ -847,9 +935,9 @@ install_module() {
   MODPATH=$MODULEROOT/$MODID
 
   # Create mod paths
-  rm -rf $MODPATH
-  mkdir -p $MODPATH
-  chcon u:object_r:system_file:s0 $MODPATH
+  [ -n "$MODPATH" ] && safe_rm_rf "$MODPATH"
+  mkdir -p "$MODPATH"
+  chcon u:object_r:system_file:s0 "$MODPATH"
 
   if is_legacy_script; then
     unzip -oj "$ZIPFILE" module.prop install.sh uninstall.sh 'common/*' -d $TMPDIR >&2
@@ -901,26 +989,29 @@ install_module() {
   if $BOOTMODE; then
     # Update info for Magisk app
     mktouch /data/adb/modules/$MODID/update
-    rm -rf /data/adb/modules/$MODID/remove 2>/dev/null
-    rm -rf /data/adb/modules/$MODID/disable 2>/dev/null
-    cp -af $MODPATH/module.prop /data/adb/modules/$MODID/module.prop
+    [ -n "$MODID" ] && safe_rm_rf "/data/adb/modules/$MODID/remove" 2>/dev/null || true
+    [ -n "$MODID" ] && safe_rm_rf "/data/adb/modules/$MODID/disable" 2>/dev/null || true
+    cp -af "$MODPATH/module.prop" "/data/adb/modules/$MODID/module.prop"
   fi
 
   # Copy over custom sepolicy rules
-  if [ -f $MODPATH/sepolicy.rule ]; then
+  if [ -f "$MODPATH/sepolicy.rule" ]; then
     ui_print "- Installing custom sepolicy rules"
     copy_preinit_files
   fi
 
   # Remove stuff that doesn't belong to modules and clean up any empty directories
-  rm -rf \
-  $MODPATH/system/placeholder $MODPATH/customize.sh \
-  $MODPATH/README.md $MODPATH/.git*
-  rmdir -p $MODPATH 2>/dev/null
+  [ -f "$MODPATH/system/placeholder" ] && safe_rm_f "$MODPATH/system/placeholder"
+  [ -f "$MODPATH/customize.sh" ] && safe_rm_f "$MODPATH/customize.sh"
+  [ -f "$MODPATH/README.md" ] && safe_rm_f "$MODPATH/README.md"
+  for gitfile in "$MODPATH"/.git*; do
+    [ -e "$gitfile" ] && rm -rf "$gitfile"
+  done
+  rmdir -p "$MODPATH" 2>/dev/null || true
 
   cd /
   $BOOTMODE || recovery_cleanup
-  rm -rf $TMPDIR
+  [ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
 
   ui_print "- Done"
 }

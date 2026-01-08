@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 TMPDIR=/dev/tmp
 rm -rf $TMPDIR
 mkdir -p $TMPDIR 2>/dev/null

@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 mount_tmpfs() {
   # If a file name 'magisk' is in current directory, mount will fail
   mv magisk magisk.tmp

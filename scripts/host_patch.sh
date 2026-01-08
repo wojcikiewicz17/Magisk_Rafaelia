@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 if [ ! -f /system/build.prop ]; then
   # Running on PC
   echo 'Please run `./build.py avd_patch` instead of directly executing the script!'

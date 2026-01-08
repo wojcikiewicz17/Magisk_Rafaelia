@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 getdir() {
   case "$1" in
     */*)
@@ -243,7 +245,7 @@ export KEEPVERITY
 export KEEPFORCEENCRYPT
 export PATCHVBMETAFLAG
 
-chmod -R 755 .
+safe_chmod -R 755 .
 
 #########
 # Unpack
