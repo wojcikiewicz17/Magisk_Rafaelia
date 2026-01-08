@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 if [ -z $ANDROID_HOME ]; then
   export ANDROID_HOME=$ANDROID_SDK_ROOT
 fi

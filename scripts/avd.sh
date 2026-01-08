@@ -196,7 +196,7 @@
 # 
 
 
-set -e
+set -euo pipefail
 shopt -s extglob
 . scripts/test_common.sh
 

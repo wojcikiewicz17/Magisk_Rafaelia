@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 trampoline() {
   mount /data 2>/dev/null
   if [ -f $MAGISKBIN/addon.d.sh ]; then
@@ -264,7 +266,7 @@ main() {
     # Restore PREINITDEVICE from previous A-only partition
     if [ -f config.orig ]; then
       PREINITDEVICE=$(grep_prop PREINITDEVICE config.orig)
-      rm config.orig
+      rm -f config.orig
     fi
 
     # Wait for post addon.d-v1 processes to finish
@@ -309,7 +311,7 @@ main() {
   # Cleanups
   cd /
   $BOOTMODE || recovery_cleanup
-  rm -rf $TMPDIR
+  [ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
 
   ui_print "- Done"
   exit 0

@@ -196,7 +196,7 @@
 # 
 
 
-set -xe
+set -euxo pipefail
 . scripts/test_common.sh
 
 cvd_args="-daemon -enable_sandbox=false -memory_mb=8192 -report_anonymous_usage_stats=n -cpus=$core_count"

@@ -196,7 +196,7 @@
 # 
 
 
-set -e
+set -euo pipefail
 
 # On macOS, gsed is required (brew install gnu-sed)
 # Required tools: gh

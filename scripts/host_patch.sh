@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 if [ ! -f /system/build.prop ]; then
   # Running on PC
   echo 'Please run `./build.py avd_patch` instead of directly executing the script!'
@@ -203,13 +205,13 @@ if [ ! -f /system/build.prop ]; then
 fi
 
 cd /data/local/tmp
-chmod 755 busybox
+safe_chmod 755 busybox
 
 if [ -z "$FIRST_STAGE" ]; then
   export FIRST_STAGE=1
   export ASH_STANDALONE=1
   # Re-exec script with busybox
-  exec ./busybox sh $0 "$@"
+  exec ./busybox sh "$0" "$@"
 fi
 
 TARGET_FILE="$1"
@@ -229,8 +231,8 @@ api_level_arch_detect
 
 unzip -oj magisk.apk "lib/$ABI/*" -x "lib/$ABI/libbusybox.so"
 for file in lib*.so; do
-  chmod 755 $file
-  mv "$file" "${file:3:${#file}-6}"
+  [ -f "$file" ] && safe_chmod 755 "$file"
+  [ -f "$file" ] && mv "$file" "${file:3:${#file}-6}"
 done
 
 if $IS_RAMDISK; then

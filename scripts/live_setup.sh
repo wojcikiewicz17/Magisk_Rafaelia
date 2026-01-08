@@ -196,11 +196,13 @@
 # 
 
 
+set -euo pipefail
+
 mount_tmpfs() {
   # If a file name 'magisk' is in current directory, mount will fail
-  mv magisk magisk.tmp
-  mount -t tmpfs -o 'mode=0755' magisk $1
-  mv magisk.tmp magisk
+  [ -f magisk ] && mv magisk magisk.tmp
+  mount -t tmpfs -o 'mode=0755' magisk "$1"
+  [ -f magisk.tmp ] && mv magisk.tmp magisk
 }
 
 mount_sbin() {
@@ -215,17 +217,17 @@ if [ ! -f /system/build.prop ]; then
 fi
 
 cd /data/local/tmp
-chmod 755 busybox
+safe_chmod 755 busybox
 
 if [ -z "$FIRST_STAGE" ]; then
   export FIRST_STAGE=1
   export ASH_STANDALONE=1
   if [ $(./busybox id -u) -ne 0 ]; then
     # Re-exec script with root
-    exec /system/xbin/su 0 /data/local/tmp/busybox sh $0
+    exec /system/xbin/su 0 /data/local/tmp/busybox sh "$0"
   else
     # Re-exec script with busybox
-    exec ./busybox sh $0
+    exec ./busybox sh "$0"
   fi
 fi
 
@@ -239,14 +241,14 @@ api_level_arch_detect
 
 unzip -oj magisk.apk "lib/$ABI/*" -x "lib/$ABI/libbusybox.so"
 for file in lib*.so; do
-  chmod 755 $file
-  mv "$file" "${file:3:${#file}-6}"
+  [ -f "$file" ] && safe_chmod 755 "$file"
+  [ -f "$file" ] && mv "$file" "${file:3:${#file}-6}"
 done
 
 if $IS64BIT && [ -e "/system/bin/linker" ]; then
   unzip -oj magisk.apk "lib/$ABI32/libmagisk.so"
   mv libmagisk.so magisk32
-  chmod 755 magisk32
+  safe_chmod 755 magisk32
 fi
 
 # Stop zygote (and previous setup if exists)
@@ -270,9 +272,10 @@ MAGISKTMP=/sbin
 if mount | grep -q rootfs; then
   # Legacy rootfs
   mount -o rw,remount /
-  rm -rf /root
+  # Only remove /root if it exists (controlled operation for rootfs overlay)
+  [ -d /root ] && [ "$(pwd)" != "/root" ] && rm -rf /root
   mkdir /root /sbin 2>/dev/null
-  chmod 750 /root /sbin
+  safe_chmod 750 /root /sbin
   ln /sbin/* /root
   mount -o ro,remount /
   mount_sbin
@@ -282,20 +285,21 @@ elif [ -e /sbin ]; then
   mount_sbin
   mkdir -p /dev/sysroot
   block=$(mount | grep ' / ' | awk '{ print $1 }')
-  [ $block = "/dev/root" ] && block=/dev/block/vda1
-  mount -o ro $block /dev/sysroot
+  [ "$block" = "/dev/root" ] && block=/dev/block/vda1
+  mount -o ro "$block" /dev/sysroot
   for file in /dev/sysroot/sbin/*; do
-    [ ! -e $file ] && break
-    if [ -L $file ]; then
-      cp -af $file /sbin
+    [ ! -e "$file" ] && break
+    if [ -L "$file" ]; then
+      cp -af "$file" /sbin
     else
-      sfile=/sbin/$(basename $file)
-      touch $sfile
-      mount -o bind $file $sfile
+      sfile=/sbin/$(basename "$file")
+      touch "$sfile"
+      mount -o bind "$file" "$sfile"
     fi
   done
   umount -l /dev/sysroot
-  rm -rf /dev/sysroot
+  # Only remove /dev/sysroot if it exists and is empty
+  [ -d /dev/sysroot ] && rmdir /dev/sysroot 2>/dev/null || rm -rf /dev/sysroot
 else
   # Android Q+ without sbin
   MAGISKTMP=/debug_ramdisk
@@ -303,30 +307,30 @@ else
 fi
 
 # Magisk stuff
-mkdir -p $MAGISKBIN 2>/dev/null
-unzip -oj magisk.apk 'assets/*.sh' -d $MAGISKBIN
+mkdir -p "$MAGISKBIN" 2>/dev/null
+unzip -oj magisk.apk 'assets/*.sh' -d "$MAGISKBIN"
 mkdir /data/adb/modules 2>/dev/null
 mkdir /data/adb/post-fs-data.d 2>/dev/null
 mkdir /data/adb/service.d 2>/dev/null
 
 for file in magisk magisk32 magiskpolicy stub.apk; do
-  chmod 755 ./$file
-  cp -af ./$file $MAGISKTMP/$file
-  cp -af ./$file $MAGISKBIN/$file
+  [ -f "./$file" ] && safe_chmod 755 "./$file"
+  [ -f "./$file" ] && cp -af "./$file" "$MAGISKTMP/$file"
+  [ -f "./$file" ] && cp -af "./$file" "$MAGISKBIN/$file"
 done
-cp -af ./magiskboot $MAGISKBIN/magiskboot
-cp -af ./magiskinit $MAGISKBIN/magiskinit
-cp -af ./busybox $MAGISKBIN/busybox
+cp -af ./magiskboot "$MAGISKBIN/magiskboot"
+cp -af ./magiskinit "$MAGISKBIN/magiskinit"
+cp -af ./busybox "$MAGISKBIN/busybox"
 
-ln -s ./magisk $MAGISKTMP/su
-ln -s ./magisk $MAGISKTMP/resetprop
-ln -s ./magiskpolicy $MAGISKTMP/supolicy
+ln -s ./magisk "$MAGISKTMP/su"
+ln -s ./magisk "$MAGISKTMP/resetprop"
+ln -s ./magiskpolicy "$MAGISKTMP/supolicy"
 
-mkdir -p $MAGISKTMP/.magisk/device
-mkdir -p $MAGISKTMP/.magisk/worker
-mount_tmpfs $MAGISKTMP/.magisk/worker
-mount --make-private $MAGISKTMP/.magisk/worker
-touch $MAGISKTMP/.magisk/config
+mkdir -p "$MAGISKTMP/.magisk/device"
+mkdir -p "$MAGISKTMP/.magisk/worker"
+mount_tmpfs "$MAGISKTMP/.magisk/worker"
+mount --make-private "$MAGISKTMP/.magisk/worker"
+touch "$MAGISKTMP/.magisk/config"
 
 export MAGISKTMP
 MAKEDEV=1 $MAGISKTMP/magisk --preinit-device 2>&1

@@ -196,6 +196,8 @@
 # 
 
 
+set -euo pipefail
+
 run_delay() {
   (sleep $1; $2)&
 }
@@ -227,25 +229,25 @@ cp_readlink() {
     cd $2
   fi
   for file in *; do
-    if [ -L $file ]; then
-      local full=$(readlink -f $file)
-      rm $file
-      cp -af $full $file
+    if [ -L "$file" ]; then
+      local full=$(readlink -f "$file")
+      rm "$file"
+      cp -af "$full" "$file"
     fi
   done
-  chmod -R 755 .
+  safe_chmod -R 755 .
   cd /
 }
 
 # $1 = install dir
 fix_env() {
   # Cleanup and make dirs
-  rm -rf $MAGISKBIN/*
-  mkdir -p $MAGISKBIN 2>/dev/null
-  chmod 700 /data/adb
-  cp_readlink $1 $MAGISKBIN
-  rm -rf $1
-  chown -R 0:0 $MAGISKBIN
+  [ -n "$MAGISKBIN" ] && [ -d "$MAGISKBIN" ] && rm -rf "$MAGISKBIN"/*
+  mkdir -p "$MAGISKBIN" 2>/dev/null
+  safe_chmod 700 /data/adb
+  cp_readlink "$1" "$MAGISKBIN"
+  [ -n "$1" ] && [ -d "$1" ] && rm -rf "$1"
+  safe_chown -R 0:0 "$MAGISKBIN"
 }
 
 # $1 = install dir
@@ -264,8 +266,8 @@ direct_install() {
       ;;
   esac
 
-  rm -f $1/new-boot.img
-  fix_env $1
+  [ -f "$1/new-boot.img" ] && rm -f "$1/new-boot.img"
+  fix_env "$1"
   run_migrations
 
   return 0
@@ -273,7 +275,7 @@ direct_install() {
 
 # $1 = uninstaller zip
 run_uninstaller() {
-  rm -rf /dev/tmp
+  [ -d /dev/tmp ] && safe_rm_rf /dev/tmp
   mkdir -p /dev/tmp/install
   unzip -o "$1" "assets/*" "lib/*" -d /dev/tmp/install
   INSTALLER=/dev/tmp/install sh /dev/tmp/install/assets/uninstaller.sh dummy 1 "$1"
@@ -291,9 +293,9 @@ restore_imgs() {
 # $1 = path to bootctl executable
 post_ota() {
   cd /data/adb
-  cp -f $1 bootctl
-  rm -f $1
-  chmod 755 bootctl
+  cp -f "$1" bootctl
+  [ -f "$1" ] && rm -f "$1"
+  safe_chmod 755 bootctl
   if ! ./bootctl hal-info; then
     rm -f bootctl
     return
@@ -306,7 +308,7 @@ post_ota() {
 rm -f /data/adb/bootctl
 rm -f /data/adb/post-fs-data.d/post_ota.sh
 EOF
-  chmod 755 post-fs-data.d/post_ota.sh
+  safe_chmod 755 post-fs-data.d/post_ota.sh
   cd /
 }
 
@@ -314,11 +316,11 @@ EOF
 # $2 = package name
 adb_pm_install() {
   local tmp=/data/local/tmp/temp.apk
-  cp -f "$1" $tmp
-  chmod 644 $tmp
-  su 2000 -c pm install -g $tmp || pm install -g $tmp || su 1000 -c pm install -g $tmp
+  cp -f "$1" "$tmp"
+  safe_chmod 644 "$tmp"
+  su 2000 -c pm install -g "$tmp" || pm install -g "$tmp" || su 1000 -c pm install -g "$tmp"
   local res=$?
-  rm -f $tmp
+  rm -f "$tmp"
   if [ $res = 0 ]; then
     appops set "$2" REQUEST_INSTALL_PACKAGES allow
   fi
