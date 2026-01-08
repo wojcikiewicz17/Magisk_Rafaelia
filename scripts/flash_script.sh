@@ -242,10 +242,12 @@ api_level_arch_detect
 ui_print "- Device platform: $ABI"
 
 BINDIR=$INSTALLER/lib/$ABI
-cd $BINDIR
-for file in lib*.so; do mv "$file" "${file:3:${#file}-6}"; done
+cd "$BINDIR"
+for file in lib*.so; do 
+  [ -f "$file" ] && mv "$file" "${file:3:${#file}-6}"
+done
 cd /
-cp -af $INSTALLER/lib/$ABI32/libmagisk.so $BINDIR/magisk32 2>/dev/null
+cp -af "$INSTALLER/lib/$ABI32/libmagisk.so" "$BINDIR/magisk32" 2>/dev/null || true
 
 # Check if system root is installed and remove
 $BOOTMODE || remove_system_su
@@ -257,15 +259,17 @@ $BOOTMODE || remove_system_su
 ui_print "- Constructing environment"
 
 # Copy required files
-rm -rf $MAGISKBIN 2>/dev/null
-mkdir -p $MAGISKBIN 2>/dev/null
-cp -af $BINDIR/. $COMMONDIR/. $BBBIN $MAGISKBIN
+[ -n "$MAGISKBIN" ] && [ -d "$MAGISKBIN" ] && rm -rf "$MAGISKBIN" 2>/dev/null
+mkdir -p "$MAGISKBIN" 2>/dev/null
+cp -af "$BINDIR/." "$COMMONDIR/." "$BBBIN" "$MAGISKBIN"
 
 # Remove files only used by the Magisk app
-rm -f $MAGISKBIN/bootctl $MAGISKBIN/main.jar \
-  $MAGISKBIN/module_installer.sh $MAGISKBIN/uninstaller.sh
+[ -f "$MAGISKBIN/bootctl" ] && rm -f "$MAGISKBIN/bootctl"
+[ -f "$MAGISKBIN/main.jar" ] && rm -f "$MAGISKBIN/main.jar"
+[ -f "$MAGISKBIN/module_installer.sh" ] && rm -f "$MAGISKBIN/module_installer.sh"
+[ -f "$MAGISKBIN/uninstaller.sh" ] && rm -f "$MAGISKBIN/uninstaller.sh"
 
-chmod -R 755 $MAGISKBIN
+[ -n "$MAGISKBIN" ] && safe_chmod -R 755 "$MAGISKBIN"
 
 # addon.d
 if [ -d /system/addon.d ]; then
@@ -273,8 +277,8 @@ if [ -d /system/addon.d ]; then
   blockdev --setrw /dev/block/mapper/system$SLOT 2>/dev/null
   mount -o rw,remount /system || mount -o rw,remount /
   ADDOND=/system/addon.d/99-magisk.sh
-  cp -af $COMMONDIR/addon.d.sh $ADDOND
-  chmod 755 $ADDOND
+  cp -af "$COMMONDIR/addon.d.sh" "$ADDOND"
+  safe_chmod 755 "$ADDOND"
 fi
 
 ##################
@@ -285,7 +289,7 @@ install_magisk
 
 # Cleanups
 $BOOTMODE || recovery_cleanup
-rm -rf $TMPDIR
+[ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
 
 ui_print "- Done"
 exit 0

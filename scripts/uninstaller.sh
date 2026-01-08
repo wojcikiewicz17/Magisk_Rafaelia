@@ -241,11 +241,13 @@ api_level_arch_detect
 ui_print "- Device platform: $ABI"
 
 BINDIR=$INSTALLER/lib/$ABI
-cd $BINDIR
-for file in lib*.so; do mv "$file" "${file:3:${#file}-6}"; done
+cd "$BINDIR"
+for file in lib*.so; do 
+  [ -f "$file" ] && mv "$file" "${file:3:${#file}-6}"
+done
 cd /
-cp -af $CHROMEDIR/. $BINDIR/chromeos
-chmod -R 755 $BINDIR
+cp -af "$CHROMEDIR/." "$BINDIR/chromeos"
+[ -n "$BINDIR" ] && safe_chmod -R 755 "$BINDIR"
 
 ############
 # Uninstall
@@ -295,7 +297,7 @@ case $((STATUS & 3)) in
     # Find SHA1 of stock boot image
     ./magiskboot cpio ramdisk.cpio "extract .backup/.magisk config.orig"
     if [ -f config.orig ]; then
-      chmod 0644 config.orig
+      safe_chmod 0644 config.orig
       SHA1=$(grep_prop SHA1 config.orig)
       rm config.orig
     fi
@@ -337,17 +339,27 @@ if $BOOTMODE; then
 fi
 
 ui_print "- Removing Magisk files"
-rm -rf \
-/cache/*magisk* /cache/unblock /data/*magisk* /data/cache/*magisk* /data/property/*magisk* \
-/data/Magisk.apk /data/busybox /data/custom_ramdisk_patch.sh /data/adb/*magisk* \
-/data/adb/post-fs-data.d /data/adb/service.d /data/adb/modules* \
-/data/unencrypted/magisk /metadata/magisk /metadata/watchdog/magisk /persist/magisk /mnt/vendor/persist/magisk
+# Remove cache files
+for item in /cache/*magisk* /cache/unblock /cache/Superuser.apk; do
+  [ -e "$item" ] && safe_rm_rf "$item"
+done
+# Remove data files
+for item in /data/*magisk* /data/cache/*magisk* /data/property/*magisk* \
+  /data/Magisk.apk /data/busybox /data/custom_ramdisk_patch.sh /data/adb/*magisk* \
+  /data/adb/post-fs-data.d /data/adb/service.d "/data/adb/modules"* \
+  /data/unencrypted/magisk; do
+  [ -e "$item" ] && safe_rm_rf "$item"
+done
+# Remove metadata/persist files
+for item in /metadata/magisk /metadata/watchdog/magisk /persist/magisk /mnt/vendor/persist/magisk; do
+  [ -e "$item" ] && safe_rm_rf "$item"
+done
 
 ADDOND=/system/addon.d/99-magisk.sh
-if [ -f $ADDOND ]; then
+if [ -f "$ADDOND" ]; then
   blockdev --setrw /dev/block/mapper/system$SLOT 2>/dev/null
   mount -o rw,remount /system || mount -o rw,remount /
-  rm -f $ADDOND
+  rm -f "$ADDOND"
 fi
 
 cd /
@@ -367,5 +379,5 @@ else
   ui_print "- Done"
 fi
 
-rm -rf $TMPDIR
+[ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
 exit 0
