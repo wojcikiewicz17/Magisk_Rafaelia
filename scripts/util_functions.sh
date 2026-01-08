@@ -322,7 +322,7 @@ is_mounted() {
 abort() {
   ui_print "$1"
   $BOOTMODE || recovery_cleanup
-  [ ! -z "$MODPATH" ] && [ -n "$MODPATH" ] && safe_rm_rf "$MODPATH"
+  [ -n "$MODPATH" ] && safe_rm_rf "$MODPATH"
   [ -n "$TMPDIR" ] && safe_rm_rf "$TMPDIR"
   exit 1
 }
@@ -989,8 +989,8 @@ install_module() {
   if $BOOTMODE; then
     # Update info for Magisk app
     mktouch /data/adb/modules/$MODID/update
-    [ -n "$MODID" ] && safe_rm_rf "/data/adb/modules/$MODID/remove" 2>/dev/null || true
-    [ -n "$MODID" ] && safe_rm_rf "/data/adb/modules/$MODID/disable" 2>/dev/null || true
+    [ -n "$MODID" ] && [ -e "/data/adb/modules/$MODID/remove" ] && safe_rm_rf "/data/adb/modules/$MODID/remove"
+    [ -n "$MODID" ] && [ -e "/data/adb/modules/$MODID/disable" ] && safe_rm_rf "/data/adb/modules/$MODID/disable"
     cp -af "$MODPATH/module.prop" "/data/adb/modules/$MODID/module.prop"
   fi
 
@@ -1005,7 +1005,7 @@ install_module() {
   [ -f "$MODPATH/customize.sh" ] && safe_rm_f "$MODPATH/customize.sh"
   [ -f "$MODPATH/README.md" ] && safe_rm_f "$MODPATH/README.md"
   for gitfile in "$MODPATH"/.git*; do
-    [ -e "$gitfile" ] && rm -rf "$gitfile"
+    [ -e "$gitfile" ] && safe_rm_rf "$gitfile"
   done
   rmdir -p "$MODPATH" 2>/dev/null || true
 

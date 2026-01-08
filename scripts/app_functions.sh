@@ -275,7 +275,7 @@ direct_install() {
 
 # $1 = uninstaller zip
 run_uninstaller() {
-  [ -d /dev/tmp ] && rm -rf /dev/tmp
+  [ -d /dev/tmp ] && safe_rm_rf /dev/tmp
   mkdir -p /dev/tmp/install
   unzip -o "$1" "assets/*" "lib/*" -d /dev/tmp/install
   INSTALLER=/dev/tmp/install sh /dev/tmp/install/assets/uninstaller.sh dummy 1 "$1"

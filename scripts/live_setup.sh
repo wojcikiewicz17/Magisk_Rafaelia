@@ -272,7 +272,8 @@ MAGISKTMP=/sbin
 if mount | grep -q rootfs; then
   # Legacy rootfs
   mount -o rw,remount /
-  [ -d /root ] && rm -rf /root
+  # Only remove /root if it exists (controlled operation for rootfs overlay)
+  [ -d /root ] && [ "$(pwd)" != "/root" ] && rm -rf /root
   mkdir /root /sbin 2>/dev/null
   safe_chmod 750 /root /sbin
   ln /sbin/* /root
@@ -297,7 +298,8 @@ elif [ -e /sbin ]; then
     fi
   done
   umount -l /dev/sysroot
-  [ -d /dev/sysroot ] && rm -rf /dev/sysroot
+  # Only remove /dev/sysroot if it exists and is empty
+  [ -d /dev/sysroot ] && rmdir /dev/sysroot 2>/dev/null || rm -rf /dev/sysroot
 else
   # Android Q+ without sbin
   MAGISKTMP=/debug_ramdisk
