@@ -330,7 +330,7 @@ mkdir -p "$MAGISKTMP/.magisk/device"
 mkdir -p "$MAGISKTMP/.magisk/worker"
 mount_tmpfs "$MAGISKTMP/.magisk/worker"
 mount --make-private "$MAGISKTMP/.magisk/worker"
-touch $MAGISKTMP/.magisk/config
+touch "$MAGISKTMP/.magisk/config"
 
 export MAGISKTMP
 MAKEDEV=1 $MAGISKTMP/magisk --preinit-device 2>&1

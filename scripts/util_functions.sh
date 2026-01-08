@@ -868,22 +868,22 @@ set_perm() {
   [ -n "$1" ] && [ -n "$2" ] && [ -n "$3" ] && safe_chown "$2:$3" "$1" || return 1
   [ -n "$1" ] && [ -n "$4" ] && safe_chmod "$4" "$1" || return 1
   local CON=$5
-  [ -z $CON ] && CON=u:object_r:system_file:s0
-  chcon $CON "$1" || return 1
+  [ -z "$CON" ] && CON=u:object_r:system_file:s0
+  chcon "$CON" "$1" || return 1
 }
 
 set_perm_recursive() {
-  find $1 -type d 2>/dev/null | while read dir; do
-    set_perm $dir $2 $3 $4 $6
+  find "$1" -type d 2>/dev/null | while read dir; do
+    set_perm "$dir" "$2" "$3" "$4" "$6"
   done
-  find $1 -type f -o -type l 2>/dev/null | while read file; do
-    set_perm $file $2 $3 $5 $6
+  find "$1" -type f -o -type l 2>/dev/null | while read file; do
+    set_perm "$file" "$2" "$3" "$5" "$6"
   done
 }
 
 mktouch() {
   mkdir -p ${1%/*} 2>/dev/null
-  [ -z $2 ] && touch "$1" || echo $2 > "$1"
+  [ -z "$2" ] && touch "$1" || echo "$2" > "$1"
   [ -n "$1" ] && safe_chmod 644 "$1"
 }
 
@@ -940,10 +940,10 @@ install_module() {
   chcon u:object_r:system_file:s0 "$MODPATH"
 
   if is_legacy_script; then
-    unzip -oj "$ZIPFILE" module.prop install.sh uninstall.sh 'common/*' -d $TMPDIR >&2
+    unzip -oj "$ZIPFILE" module.prop install.sh uninstall.sh 'common/*' -d "$TMPDIR" >&2
 
     # Load install script
-    . $TMPDIR/install.sh
+    . "$TMPDIR/install.sh"
 
     # Callbacks
     print_modname

@@ -247,7 +247,10 @@ for file in lib*.so; do
   [ -f "$file" ] && mv "$file" "${file:3:${#file}-6}"
 done
 cd /
-cp -af "$INSTALLER/lib/$ABI32/libmagisk.so" "$BINDIR/magisk32" 2>/dev/null || true
+# Only copy magisk32 if it exists for the platform
+if [ -f "$INSTALLER/lib/$ABI32/libmagisk.so" ]; then
+  cp -af "$INSTALLER/lib/$ABI32/libmagisk.so" "$BINDIR/magisk32" 2>/dev/null
+fi
 
 # Check if system root is installed and remove
 $BOOTMODE || remove_system_su
