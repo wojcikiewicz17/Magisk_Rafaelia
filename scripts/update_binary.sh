@@ -206,7 +206,7 @@ export BBBIN=$TMPDIR/busybox
 for arch in "x86_64" "x86" "arm64-v8a" "armeabi-v7a"; do
   unzip -o "$3" "lib/$arch/libbusybox.so" -d "$TMPDIR" >&2
   libpath="$TMPDIR/lib/$arch/libbusybox.so"
-  [ -f "$libpath" ] && safe_chmod 755 "$libpath"
+  [ -f "$libpath" ] && [ -n "$libpath" ] && chmod 755 "$libpath"
   if [ -x "$libpath" ] && "$libpath" >/dev/null 2>&1; then
     mv -f "$libpath" "$BBBIN"
     break
