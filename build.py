@@ -245,16 +245,15 @@ def cmd_out(cmds: list):
         cmds (list): Command and arguments to execute as a list
         
     Returns:
-        str: The stdout output of the command (on success only)
+        str: The stdout output of the command
         
     Note:
-        This function calls the error() function on failure, which exits the program
-        via sys.exit(1), so it never returns in failure cases.
-        Uses errors='replace' for UTF-8 decoding to handle potentially malformed 
-        byte sequences gracefully by replacing them with the Unicode replacement 
-        character (�). This ensures the function doesn't crash on invalid UTF-8 
-        but may mask encoding issues.
+        Exits the program via error() function on command failure.
+        Uses safe UTF-8 decoding that replaces invalid byte sequences.
     """
+    # Sanitize command display to avoid exposing sensitive data in args
+    cmd_display = cmds[0] if cmds else "unknown command"
+    
     try:
         result = subprocess.run(
             cmds,
@@ -270,12 +269,8 @@ def cmd_out(cmds: list):
             stderr_output = e.stderr.decode("utf-8", errors="replace")
         else:
             stderr_output = str(e.stderr) if e.stderr else "No error output"
-        # Only show first argument (command) to avoid exposing sensitive data in args
-        cmd_display = cmds[0] if cmds else "unknown command"
         error(f"Command failed: {cmd_display}\nError: {stderr_output}")
     except (OSError, UnicodeDecodeError) as e:
-        # Only show first argument (command) to avoid exposing sensitive data in args
-        cmd_display = cmds[0] if cmds else "unknown command"
         error(f"Command execution error: {cmd_display}\nError: {e}")
 
 
