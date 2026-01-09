@@ -273,11 +273,11 @@ arm64_features_t detect_arm64_features(void);
 - **Operações vetoriais**: Registros NEON de 128 bits
 
 **Ganhos de Performance**:
-| Operação | Genérico | SIMD | Aceleração |
-|----------|----------|------|------------|
-| SHA-256 | 100 MB/s | 400 MB/s | 4x |
-| BLAKE3 | 150 MB/s | 600 MB/s | 4x |
-| Compressão LZ4 | 300 MB/s | 800 MB/s | 2.7x |
+| Operação | Genérico | SIMD | Aceleração | Arquitetura |
+|----------|----------|------|------------|-------------|
+| SHA-256 | 100 MB/s | 400 MB/s | 4x | x86_64 SHA-NI |
+| BLAKE3 | 150 MB/s | 600 MB/s | 4x | x86_64 AVX2 |
+| Compressão LZ4 | 300 MB/s | 800 MB/s | 2.7x | ARM64 NEON |
 
 **Exemplo** (SHA-256 com Extensões SHA):
 ```c
@@ -313,8 +313,11 @@ void matrix_multiply_optimized(
         for (size_t jj = 0; jj < N; jj += TILE_SIZE) {
             for (size_t kk = 0; kk < N; kk += TILE_SIZE) {
                 // Processa tile com prefetching
-                __builtin_prefetch(&A[(i+1) * N + kk], 0, 3);
-                // ... computação
+                // Exemplo de prefetch (implementação real estaria dentro dos loops internos)
+                for (size_t i = ii; i < (ii + TILE_SIZE < N ? ii + TILE_SIZE : N); i++) {
+                    __builtin_prefetch(&A[(i+1) * N + kk], 0, 3);
+                    // ... computação
+                }
             }
         }
     }
