@@ -241,6 +241,7 @@ def execv(cmds: list, env=None):
 
 
 def cmd_out(cmds: list):
+    """Execute command and return stdout. Exits with error message if command fails."""
     try:
         result = subprocess.run(
             cmds,
@@ -249,9 +250,10 @@ def cmd_out(cmds: list):
             shell=is_windows,
             check=True,
         )
-        return result.stdout.strip().decode("utf-8")
+        return result.stdout.strip().decode("utf-8", errors="replace")
     except subprocess.CalledProcessError as e:
-        error(f"Command failed: {' '.join(cmds)}\nError: {e.stderr.decode('utf-8')}")
+        stderr_output = e.stderr.decode("utf-8", errors="replace") if e.stderr else "No error output"
+        error(f"Command failed: {' '.join(cmds)}\nError: {stderr_output}")
     except (OSError, UnicodeDecodeError) as e:
         error(f"Command execution error: {' '.join(cmds)}\nError: {e}")
 
