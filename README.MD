@@ -159,6 +159,10 @@ git checkout develop  # For development
 # or
 git checkout main     # For stable release
 
+# (Optional) Configure for ARM64 only (faster builds)
+cp config.prop.sample config.prop
+# Edit config.prop and uncomment: abiList=arm64-v8a
+
 # Install Magisk NDK
 python3 build.py ndk
 
@@ -166,7 +170,13 @@ python3 build.py ndk
 python3 build.py -v all
 ```
 
-See [COMO_OBTER_APK.md](COMO_OBTER_APK.md) or [HOW_TO_GET_APK.md](HOW_TO_GET_APK.md) for detailed instructions.
+**Build Guides:**
+- 🇧🇷 [**Como Compilar para ARM64**](COMPILAR_ARM64.md) - Guia rápido em português
+- 🇬🇧 [**How to Build for ARM64**](BUILD_ARM64.md) - Quick guide in English
+- [COMO_OBTER_APK.md](COMO_OBTER_APK.md) - Guia completo em português
+- [HOW_TO_GET_APK.md](HOW_TO_GET_APK.md) - Complete guide in English
+
+**Note:** By default, builds include all architectures. For ARM64-only builds (recommended for modern devices like RMX3834), copy `config.prop.sample` to `config.prop` and set `abiList=arm64-v8a`.
 
 ## Useful Links
 
