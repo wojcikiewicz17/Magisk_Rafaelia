@@ -242,17 +242,17 @@ def cmd_out(cmds: list):
     """Execute command and return stdout on success, or exit program on failure.
     
     Args:
-        cmds: Command and arguments to execute as a list
+        cmds (list): Command and arguments to execute as a list
         
     Returns:
         str: The stdout output of the command (on success only)
         
-    Notes:
-        - This function calls sys.exit(1) on error and never returns in failure cases
-        - Uses errors='replace' for UTF-8 decoding to handle potentially malformed 
-          byte sequences gracefully by replacing them with the Unicode replacement 
-          character (�). This ensures the function doesn't crash on invalid UTF-8 
-          but may mask encoding issues.
+    Note:
+        This function calls sys.exit(1) on error and never returns in failure cases.
+        Uses errors='replace' for UTF-8 decoding to handle potentially malformed 
+        byte sequences gracefully by replacing them with the Unicode replacement 
+        character (�). This ensures the function doesn't crash on invalid UTF-8 
+        but may mask encoding issues.
     """
     try:
         result = subprocess.run(
@@ -265,9 +265,13 @@ def cmd_out(cmds: list):
         return result.stdout.strip().decode("utf-8", errors="replace")
     except subprocess.CalledProcessError as e:
         stderr_output = e.stderr.decode("utf-8", errors="replace") if e.stderr else "No error output"
-        error(f"Command failed: {' '.join(cmds)}\nError: {stderr_output}")
+        # Only show first argument (command) to avoid exposing sensitive data in args
+        cmd_display = cmds[0] if cmds else "unknown command"
+        error(f"Command failed: {cmd_display}\nError: {stderr_output}")
     except (OSError, UnicodeDecodeError) as e:
-        error(f"Command execution error: {' '.join(cmds)}\nError: {e}")
+        # Only show first argument (command) to avoid exposing sensitive data in args
+        cmd_display = cmds[0] if cmds else "unknown command"
+        error(f"Command execution error: {cmd_display}\nError: {e}")
 
 
 ###############
