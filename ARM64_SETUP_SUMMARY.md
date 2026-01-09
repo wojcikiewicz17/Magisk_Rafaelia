@@ -37,8 +37,11 @@ git clone --recurse-submodules https://github.com/rafaelmeloreisnovo/Magisk_Rafa
 cd Magisk_Rafaelia
 
 # 2. Configure para ARM64
-cp config.prop.sample config.prop
-echo "abiList=arm64-v8a" >> config.prop
+cat > config.prop << 'EOF'
+# Magisk_Rafaelia Build Configuration
+# Build only for ARM64 (recommended for modern devices)
+abiList=arm64-v8a
+EOF
 
 # 3. Instale o NDK e compile
 python3 build.py ndk
@@ -53,8 +56,11 @@ git clone --recurse-submodules https://github.com/rafaelmeloreisnovo/Magisk_Rafa
 cd Magisk_Rafaelia
 
 # 2. Configure for ARM64
-cp config.prop.sample config.prop
-echo "abiList=arm64-v8a" >> config.prop
+cat > config.prop << 'EOF'
+# Magisk_Rafaelia Build Configuration
+# Build only for ARM64 (recommended for modern devices)
+abiList=arm64-v8a
+EOF
 
 # 3. Install NDK and build
 python3 build.py ndk

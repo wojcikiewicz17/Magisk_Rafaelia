@@ -35,12 +35,24 @@ The generated APK will be in `out/app-debug.apk` (or `out/app-release.apk` if us
 
 To build ARM64 only (recommended for modern devices):
 
+**Option 1: Edit manually**
 ```bash
 # Copy the sample file
 cp config.prop.sample config.prop
 
-# Edit config.prop and add:
-echo "abiList=arm64-v8a" >> config.prop
+# Edit config.prop with your preferred editor and uncomment the line:
+# abiList=arm64-v8a
+# (remove the # from the beginning of the line)
+```
+
+**Option 2: Create directly**
+```bash
+# Create config.prop with ARM64 configuration
+cat > config.prop << 'EOF'
+# Magisk_Rafaelia Build Configuration
+# Build only for ARM64 (recommended for modern devices)
+abiList=arm64-v8a
+EOF
 ```
 
 **Benefits of ARM64-only builds:**
