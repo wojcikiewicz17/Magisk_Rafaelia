@@ -241,12 +241,20 @@ def execv(cmds: list, env=None):
 
 
 def cmd_out(cmds: list):
-    """Execute command and return stdout. 
+    """Execute command and return stdout on success, or exit program on failure.
     
-    Exits with error message if command fails.
-    Uses errors='replace' for UTF-8 decoding to handle potentially malformed 
-    byte sequences gracefully by replacing them with the Unicode replacement character (�).
-    This ensures the function doesn't crash on invalid UTF-8 but may mask encoding issues.
+    Args:
+        cmds: Command and arguments to execute as a list
+        
+    Returns:
+        str: The stdout output of the command (on success only)
+        
+    Notes:
+        - This function calls sys.exit(1) on error and never returns in failure cases
+        - Uses errors='replace' for UTF-8 decoding to handle potentially malformed 
+          byte sequences gracefully by replacing them with the Unicode replacement 
+          character (�). This ensures the function doesn't crash on invalid UTF-8 
+          but may mask encoding issues.
     """
     try:
         result = subprocess.run(
