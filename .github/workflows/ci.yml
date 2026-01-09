@@ -267,6 +267,7 @@ jobs:
         continue-on-error: true
 
       - name: Check test results
+        id: test_result_check
         if: always()
         run: |
           if [ "${{ steps.instrumented_tests.outcome }}" = "failure" ]; then
@@ -278,6 +279,7 @@ jobs:
           fi
 
       - name: Collect artifacts & snapshot
+        if: always()
         run: |
           if [ -f $GITHUB_WORKSPACE/logcat.pid ]; then
             kill $(cat $GITHUB_WORKSPACE/logcat.pid) || true
@@ -314,4 +316,15 @@ jobs:
             list avd | grep -q "Name: ${EMULATOR_NAME}"; then
             ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/avdmanager \
               delete avd -n ${EMULATOR_NAME}
+          fi
+      
+      - name: Report test status
+        if: always()
+        run: |
+          echo "## Instrumented Test Results" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.test_result_check.outputs.test_failed }}" = "true" ]; then
+            echo "❌ **Tests Failed**: Check artifacts for details" >> $GITHUB_STEP_SUMMARY
+            echo "::warning::Instrumented tests failed. Check the emulator-snapshot artifact for logs."
+          else
+            echo "✅ **Tests Passed**: All instrumented tests completed successfully" >> $GITHUB_STEP_SUMMARY
           fi
