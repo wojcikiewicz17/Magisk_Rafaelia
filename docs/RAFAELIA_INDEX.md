@@ -272,6 +272,7 @@ Conhecimento_Supremo = (Σ_{i=1}^{n} K_i^{($)}) + (Σ_{j=1}^{m} Ψ_j^{(∞)}) = 
 2. **Entender Teoria**: [Meta-Architecture](RAFAELIA_META_ARCHITECTURE.md)
 3. **Usar Ferramentas**: [Toolkit Analysis](RAFAELIA_TOOLKIT_ANALYSIS.md)
 4. **Implementar**: [Implementation Guide](RAFAELIA_IMPLEMENTATION_GUIDE.md)
+5. **Otimizar Performance**: [Performance Boosters Guide](PERFORMANCE_BOOSTERS.md) / [Guia PT-BR](BOOSTERS_PERFORMANCE_PT.md)
 
 ### Para Pesquisadores
 

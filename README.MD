@@ -111,6 +111,13 @@ See [Activation Guide](docs/ACTIVATION_GUIDE.md) for detailed instructions.
 - **[Hardware Optimization Guide](HARDWARE_OPTIMIZATION_GUIDE.md)** - ✓ **NEW!** SIMD, cache, assembly optimizations
 - **[Implementation Summary](BAREMETAL_IMPLEMENTATION_SUMMARY.md)** - ✓ **NEW!** Complete status & roadmap
 
+#### 🚀 Performance Boosters (NEW!)
+- **[Performance Boosters Guide](docs/PERFORMANCE_BOOSTERS.md)** - ✓ **NEW!** Complete guide to all performance boosters
+  - 16 distinct booster types (Software, Hardware, Mathematical, Cognitive)
+  - Detailed benchmarks and performance gains (up to 6x improvement)
+  - Usage examples and activation instructions
+- **[Guia de Boosters PT-BR](docs/BOOSTERS_PERFORMANCE_PT.md)** - ✓ **NEW!** Versão completa em português
+
 #### 🔧 Implementation & Operations
 - [Framework Overview](docs/RAFAELIA_FRAMEWORK.md) - Complete specification
 - [Summary](docs/RAFAELIA_SUMMARY.md) - Quick overview and features
