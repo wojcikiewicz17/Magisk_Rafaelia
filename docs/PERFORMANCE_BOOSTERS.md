@@ -312,11 +312,13 @@ void matrix_multiply_optimized(
     for (size_t ii = 0; ii < N; ii += TILE_SIZE) {
         for (size_t jj = 0; jj < N; jj += TILE_SIZE) {
             for (size_t kk = 0; kk < N; kk += TILE_SIZE) {
-                // Process tile with prefetching
-                // Example prefetch (actual implementation would be inside inner loops)
+                // Process tile (simplified example showing prefetch concept)
+                // In production, prefetch would be inside innermost loops
+                // before actual computation to hide memory latency
                 for (size_t i = ii; i < (ii + TILE_SIZE < N ? ii + TILE_SIZE : N); i++) {
                     __builtin_prefetch(&A[(i+1) * N + kk], 0, 3);
-                    // ... computation
+                    // Actual matrix multiplication computation here...
+                    // for (size_t j = ...) for (size_t k = ...) C[i*N+j] += A[i*N+k] * B[k*N+j];
                 }
             }
         }
