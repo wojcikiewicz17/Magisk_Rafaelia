@@ -38,7 +38,7 @@ cd Magisk_Rafaelia
 
 # 2. Configure para ARM64
 cp config.prop.sample config.prop
-echo "abiList=arm64-v8a" > config.prop
+echo "abiList=arm64-v8a" >> config.prop
 
 # 3. Instale o NDK e compile
 python3 build.py ndk
@@ -54,7 +54,7 @@ cd Magisk_Rafaelia
 
 # 2. Configure for ARM64
 cp config.prop.sample config.prop
-echo "abiList=arm64-v8a" > config.prop
+echo "abiList=arm64-v8a" >> config.prop
 
 # 3. Install NDK and build
 python3 build.py ndk
