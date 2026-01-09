@@ -47,6 +47,12 @@ Popular languages / Idiomas populares:
 - 🇧🇷 [**OBTER APK RÁPIDO**](OBTER_APK_RAPIDO.md) ← Comece aqui! (Português)
 - 🇬🇧 [**GET APK QUICK**](GET_APK_QUICK.md) ← Start here! (English)
 
+**Need help compiling for ARM64 or fixing CI checks?**
+- 🔧 [**Guia de Troubleshooting ARM64**](GUIA_COMPILACAO_ARM64_TROUBLESHOOTING.md) ← Como acompanhar até compilar! (PT-BR)
+- 🔧 [**ARM64 Troubleshooting Guide**](ARM64_COMPILATION_TROUBLESHOOTING_GUIDE.md) ← Track to compilation! (EN)
+- 📊 [**CI Quick Reference**](CI_MONITORING_QUICKREF.md) ← Monitor checks
+- 📈 [**Workflow Diagrams**](ARM64_COMPILATION_WORKFLOW_DIAGRAM.md) ← Visual guide
+
 ---
 
 ## Introduction
