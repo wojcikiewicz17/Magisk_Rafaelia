@@ -194,16 +194,16 @@ def mv(source: Path, target: Path):
     try:
         shutil.move(source, target)
         vprint(f"mv {source} -> {target}")
-    except:
-        pass
+    except (OSError, IOError, shutil.Error) as e:
+        vprint(f"Warning: Failed to move {source} -> {target}: {e}")
 
 
 def cp(source: Path, target: Path):
     try:
         shutil.copyfile(source, target)
         vprint(f"cp {source} -> {target}")
-    except:
-        pass
+    except (OSError, IOError, shutil.Error) as e:
+        vprint(f"Warning: Failed to copy {source} -> {target}: {e}")
 
 
 def rm(file: Path):
@@ -239,16 +239,39 @@ def execv(cmds: list, env=None):
 
 
 def cmd_out(cmds: list):
-    return (
-        subprocess.run(
+    """Execute command and return stdout on success, or exit program on failure.
+    
+    Args:
+        cmds (list): Command and arguments to execute as a list
+        
+    Returns:
+        str: The stdout output of the command
+        
+    Note:
+        Exits the program via error() function on command failure.
+        Uses safe UTF-8 decoding that replaces invalid byte sequences.
+    """
+    # Sanitize command display to avoid exposing sensitive data in args
+    cmd_display = cmds[0] if cmds else "unknown command"
+    
+    try:
+        result = subprocess.run(
             cmds,
             stdout=subprocess.PIPE,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             shell=is_windows,
+            check=True,
         )
-        .stdout.strip()
-        .decode("utf-8")
-    )
+        return result.stdout.strip().decode("utf-8", errors="replace")
+    except subprocess.CalledProcessError as e:
+        # Safely decode stderr if available
+        if e.stderr and isinstance(e.stderr, bytes):
+            stderr_output = e.stderr.decode("utf-8", errors="replace")
+        else:
+            stderr_output = str(e.stderr) if e.stderr else "No error output"
+        error(f"Command failed: {cmd_display}\nError: {stderr_output}")
+    except (OSError, UnicodeDecodeError) as e:
+        error(f"Command execution error: {cmd_display}\nError: {e}")
 
 
 ###############
@@ -432,7 +455,7 @@ def ensure_toolchain():
     try:
         with open(Path(ndk_path, "ONDK_VERSION"), "r") as ondk_ver:
             assert ondk_ver.read().strip(" \t\r\n") == ondk_version
-    except:
+    except (FileNotFoundError, AssertionError, OSError) as e:
         error('Unmatched NDK. Please install/upgrade NDK with "build.py ndk"')
 
     if sccache := shutil.which("sccache"):

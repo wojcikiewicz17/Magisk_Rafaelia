@@ -198,8 +198,9 @@ def find_files_needing_correction(root_dir: Path) -> List[Path]:
                     content = f.read()
                     if detect_problematic_header(content):
                         files.append(filepath)
-            except:
-                pass  # Skip unreadable files
+            except (OSError, IOError, UnicodeDecodeError) as e:
+                print(f"Warning: Skipping unreadable file {filepath}: {e}", file=sys.stderr)
+                # Skip unreadable files
     
     return files
 
