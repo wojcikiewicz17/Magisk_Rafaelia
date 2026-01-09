@@ -196,7 +196,6 @@ def mv(source: Path, target: Path):
         vprint(f"mv {source} -> {target}")
     except (OSError, IOError, shutil.Error) as e:
         vprint(f"Warning: Failed to move {source} -> {target}: {e}")
-        pass
 
 
 def cp(source: Path, target: Path):
@@ -205,7 +204,6 @@ def cp(source: Path, target: Path):
         vprint(f"cp {source} -> {target}")
     except (OSError, IOError, shutil.Error) as e:
         vprint(f"Warning: Failed to copy {source} -> {target}: {e}")
-        pass
 
 
 def rm(file: Path):
