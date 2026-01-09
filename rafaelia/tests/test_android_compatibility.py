@@ -14,7 +14,8 @@ import unittest
 import sys
 from pathlib import Path
 
-# Add parent directory to path
+# Add parent directory to path for direct module testing without package installation
+# This allows testing the module in development mode
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from core.android_compatibility import (

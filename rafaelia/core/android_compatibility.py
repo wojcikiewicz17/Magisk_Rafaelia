@@ -46,6 +46,7 @@ All Rights Reserved.
 import re
 import logging
 import platform
+import subprocess
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
@@ -440,38 +441,34 @@ class AndroidCompatibilityChecker:
         }
         
         # Try to detect Android-specific info (when running on device)
-        try:
-            if platform.system() == 'Linux':
-                # Try to read Android properties (if available)
-                import subprocess
-                try:
-                    api_level = subprocess.check_output(
-                        ['getprop', 'ro.build.version.sdk'],
-                        stderr=subprocess.DEVNULL
-                    ).decode().strip()
-                    info['android_api_level'] = api_level
-                except:
-                    pass
-                
-                try:
-                    model = subprocess.check_output(
-                        ['getprop', 'ro.product.model'],
-                        stderr=subprocess.DEVNULL
-                    ).decode().strip()
-                    info['device_model'] = model
-                except:
-                    pass
-                
-                try:
-                    manufacturer = subprocess.check_output(
-                        ['getprop', 'ro.product.manufacturer'],
-                        stderr=subprocess.DEVNULL
-                    ).decode().strip()
-                    info['device_manufacturer'] = manufacturer
-                except:
-                    pass
-        except:
-            pass
+        if platform.system() == 'Linux':
+            # Try to read Android properties (if available)
+            try:
+                api_level = subprocess.check_output(
+                    ['getprop', 'ro.build.version.sdk'],
+                    stderr=subprocess.DEVNULL
+                ).decode().strip()
+                info['android_api_level'] = api_level
+            except (subprocess.CalledProcessError, OSError, FileNotFoundError):
+                pass
+            
+            try:
+                model = subprocess.check_output(
+                    ['getprop', 'ro.product.model'],
+                    stderr=subprocess.DEVNULL
+                ).decode().strip()
+                info['device_model'] = model
+            except (subprocess.CalledProcessError, OSError, FileNotFoundError):
+                pass
+            
+            try:
+                manufacturer = subprocess.check_output(
+                    ['getprop', 'ro.product.manufacturer'],
+                    stderr=subprocess.DEVNULL
+                ).decode().strip()
+                info['device_manufacturer'] = manufacturer
+            except (subprocess.CalledProcessError, OSError, FileNotFoundError):
+                pass
         
         return info
 
