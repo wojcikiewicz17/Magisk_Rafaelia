@@ -162,11 +162,17 @@ git checkout main     # For stable release
 # Install Magisk NDK
 python3 build.py ndk
 
-# Build everything
+# Build everything (defaults to ARM64 only for faster builds)
 python3 build.py -v all
 ```
 
-See [COMO_OBTER_APK.md](COMO_OBTER_APK.md) or [HOW_TO_GET_APK.md](HOW_TO_GET_APK.md) for detailed instructions.
+**Build Guides:**
+- 🇧🇷 [**Como Compilar para ARM64**](COMPILAR_ARM64.md) - Guia rápido em português
+- 🇬🇧 [**How to Build for ARM64**](BUILD_ARM64.md) - Quick guide in English
+- [COMO_OBTER_APK.md](COMO_OBTER_APK.md) - Guia completo em português
+- [HOW_TO_GET_APK.md](HOW_TO_GET_APK.md) - Complete guide in English
+
+**Note:** The default build is now optimized for ARM64 devices (like RMX3834). See `config.prop` to customize architectures.
 
 ## Useful Links
 
