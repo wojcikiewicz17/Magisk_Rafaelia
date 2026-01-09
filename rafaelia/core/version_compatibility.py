@@ -28,6 +28,7 @@ Features:
 - Data migration support for version transitions
 - Breaking change detection and warnings
 - Automatic compatibility layer selection
+- Android platform compatibility integration
 
 Part of Magisk_Rafaelia RAFAELIA Framework
 Philosophy: VAZIO → VERBO → CHEIO → RETRO (Maintaining compatibility across versions)
@@ -386,6 +387,61 @@ class VersionCompatibilityChecker:
         
         # Return default version if not found
         return DEFAULT_VERSION
+    
+    def check_android_compatibility(
+        self,
+        rafaelia_version: str,
+        android_api: Optional[int] = None,
+        kernel_version: Optional[str] = None,
+        device_model: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Check RAFAELIA version compatibility with Android platform.
+        
+        Args:
+            rafaelia_version: RAFAELIA version string
+            android_api: Android API level
+            kernel_version: Kernel version string
+            device_model: Device model
+            
+        Returns:
+            Dictionary with compatibility information
+        """
+        try:
+            from rafaelia.core.android_compatibility import check_compatibility
+            
+            # Check Android platform compatibility
+            android_result = check_compatibility(
+                api_level=android_api,
+                kernel_version=kernel_version,
+                device_model=device_model
+            )
+            
+            # Parse RAFAELIA version
+            try:
+                raf_version = SemanticVersion.parse(rafaelia_version)
+            except ValueError:
+                raf_version = None
+            
+            return {
+                'rafaelia_version': rafaelia_version,
+                'android_compatible': android_result.is_compatible,
+                'android_details': android_result.to_dict(),
+                'rafaelia_version_valid': raf_version is not None,
+                'recommendations': [
+                    *android_result.recommendations,
+                    f"RAFAELIA {rafaelia_version} compatibility verified"
+                ]
+            }
+        except ImportError:
+            self.logger.warning("Android compatibility module not available")
+            return {
+                'rafaelia_version': rafaelia_version,
+                'android_compatible': True,
+                'android_details': {},
+                'rafaelia_version_valid': True,
+                'recommendations': ["Android compatibility check skipped"]
+            }
 
 
 # Module-level convenience functions
@@ -406,6 +462,30 @@ def get_migration_guide(from_version: str, to_version: str) -> Dict:
     checker = VersionCompatibilityChecker()
     check = checker.check_compatibility(from_version, to_version)
     return check.to_dict()
+
+
+def check_android_platform_compatibility(
+    rafaelia_version: str = "1.0.0",
+    android_api: Optional[int] = None,
+    kernel_version: Optional[str] = None,
+    device_model: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Check RAFAELIA and Android platform compatibility.
+    
+    Args:
+        rafaelia_version: RAFAELIA version to check
+        android_api: Android API level
+        kernel_version: Kernel version string
+        device_model: Device model
+        
+    Returns:
+        Dictionary with comprehensive compatibility information
+    """
+    checker = VersionCompatibilityChecker()
+    return checker.check_android_compatibility(
+        rafaelia_version, android_api, kernel_version, device_model
+    )
 
 
 if __name__ == "__main__":

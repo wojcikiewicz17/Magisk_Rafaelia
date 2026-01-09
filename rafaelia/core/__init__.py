@@ -84,6 +84,22 @@ from rafaelia.core.formulas import (
     BITRAF64,
     R_CORR,
 )
+from rafaelia.core.android_compatibility import (
+    AndroidVersion,
+    KernelVersion,
+    DeviceInfo,
+    AndroidCompatibilityChecker,
+    check_compatibility,
+)
+from rafaelia.core.bug_handler import (
+    BugCategory,
+    BugSeverity,
+    BugReport,
+    StateInvariant,
+    BugHandler,
+    DeterministicValidator,
+    handle_bug,
+)
 
 __all__ = [
     # Original TT algorithms
@@ -128,4 +144,18 @@ __all__ = [
     'SQRT_3_2',
     'BITRAF64',
     'R_CORR',
+    # Android compatibility
+    'AndroidVersion',
+    'KernelVersion',
+    'DeviceInfo',
+    'AndroidCompatibilityChecker',
+    'check_compatibility',
+    # Bug handling
+    'BugCategory',
+    'BugSeverity',
+    'BugReport',
+    'StateInvariant',
+    'BugHandler',
+    'DeterministicValidator',
+    'handle_bug',
 ]
