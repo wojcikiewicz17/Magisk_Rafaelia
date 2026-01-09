@@ -81,8 +81,8 @@ Builds only for ARM64:
 - `arm64-v8a` (ARM 64-bit)
 
 **Benefits:**
-- ✅ **4x faster** compilation time
-- ✅ **~30% smaller** APK size
+- ✅ **Up to ~4x faster** compilation time (in typical scenarios compared to building all 4 architectures; actual results may vary)
+- ✅ **Around ~30% smaller** APK size (when targeting only `arm64-v8a` instead of multiple ABIs; actual results may vary by project)
 - ✅ Optimized for modern devices
 - ✅ Perfect for RMX3834 and similar ARM64 devices
 

@@ -56,8 +56,8 @@ EOF
 ```
 
 **Vantagens de compilar apenas ARM64:**
-- ✅ Compilação 4x mais rápida
-- ✅ APK menor (~30% de redução)
+- ✅ Compilação até cerca de 4x mais rápida em cenários típicos (comparado a compilar para todas as 4 arquiteturas)
+- ✅ APK menor (tipicamente ~30% de redução, comparado a compilar para todas as 4 arquiteturas)
 - ✅ Otimizado para dispositivos modernos (RMX3834, etc.)
 
 ### Arquiteturas Suportadas

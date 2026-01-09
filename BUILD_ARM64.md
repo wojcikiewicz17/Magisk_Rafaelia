@@ -56,8 +56,8 @@ EOF
 ```
 
 **Benefits of ARM64-only builds:**
-- ✅ 4x faster compilation
-- ✅ Smaller APK (~30% reduction)
+- ✅ Typically up to ~4x faster compilation (compared to building all supported architectures)
+- ✅ Smaller APK size (often around ~30% reduction compared to multi-ABI builds)
 - ✅ Optimized for modern devices (RMX3834, etc.)
 
 ### Supported Architectures
