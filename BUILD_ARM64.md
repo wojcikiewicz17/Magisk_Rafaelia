@@ -2,7 +2,7 @@
 
 ## 🎯 Quick ARM64 Setup
 
-This project is now pre-configured to compile for **ARM64 (arm64-v8a)** by default through the `config.prop` file.
+This project supports optimized compilation for **ARM64 (arm64-v8a)**.
 
 ### Target Device
 - **Model**: RMX3834 (Realme GT Neo 3T)
@@ -16,10 +16,14 @@ This project is now pre-configured to compile for **ARM64 (arm64-v8a)** by defau
 git clone --recurse-submodules https://github.com/rafaelmeloreisnovo/Magisk_Rafaelia.git
 cd Magisk_Rafaelia
 
-# 2. Install Magisk NDK
+# 2. Configure for ARM64 (optional, but recommended for faster builds)
+cp config.prop.sample config.prop
+# Edit config.prop and uncomment: abiList=arm64-v8a
+
+# 3. Install Magisk NDK
 python3 build.py ndk
 
-# 3. Build everything (ARM64 only by default)
+# 4. Build everything
 python3 build.py -v all
 ```
 
@@ -29,22 +33,32 @@ The generated APK will be in `out/app-debug.apk` (or `out/app-release.apk` if us
 
 ### config.prop File
 
-The `config.prop` file in the project root defines:
+To build ARM64 only (recommended for modern devices):
 
-```properties
-# Compile only for ARM64
-abiList=arm64-v8a
+```bash
+# Copy the sample file
+cp config.prop.sample config.prop
+
+# Edit config.prop and add:
+echo "abiList=arm64-v8a" >> config.prop
 ```
+
+**Benefits of ARM64-only builds:**
+- ✅ 4x faster compilation
+- ✅ Smaller APK (~30% reduction)
+- ✅ Optimized for modern devices (RMX3834, etc.)
 
 ### Supported Architectures
 
 Magisk_Rafaelia supports the following architectures:
 
-- ✅ **arm64-v8a** (ARM 64-bit) - **DEFAULT**
+- ✅ **arm64-v8a** (ARM 64-bit) - **RECOMMENDED**
 - armeabi-v7a (ARM 32-bit)
 - x86 (Intel/AMD 32-bit)
 - x86_64 (Intel/AMD 64-bit)
 - riscv64 (RISC-V 64-bit, experimental)
+
+**Default:** If you don't create `config.prop`, the system will build for all architectures (except riscv64).
 
 ### Build for Multiple Architectures
 
@@ -55,11 +69,7 @@ If you want to build for all architectures, edit `config.prop`:
 abiList=armeabi-v7a,x86,arm64-v8a,x86_64
 ```
 
-Or comment out the line:
-
-```properties
-# abiList=arm64-v8a
-```
+Or leave the file empty to use defaults.
 
 ### Build for a Specific Architecture
 

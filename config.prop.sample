@@ -4,14 +4,29 @@
 ##########################################################
 
 # The version name of Magisk. Default: git HEAD short SHA1
-version=string
+# version=27.0
 
 # Output path. Default: out
-outdir=string
+# outdir=out
 
 # List of ABIs to build, separated with ','
 # Default: armeabi-v7a,x86,arm64-v8a,x86_64
-abiList=[string]
+# 
+# 🎯 RECOMMENDED FOR MODERN DEVICES (ARM64 only):
+# Copy this file to 'config.prop' and uncomment the line below
+# abiList=arm64-v8a
+#
+# This will build ONLY for ARM64 (faster builds, optimized for devices like RMX3834)
+# For all architectures, use: abiList=armeabi-v7a,x86,arm64-v8a,x86_64
+
+#####################################################
+# Device-specific examples:
+#####################################################
+# RMX3834 (Realme GT Neo 3T, ARM64):
+# abiList=arm64-v8a
+#
+# All architectures (slower build):
+# abiList=armeabi-v7a,x86,arm64-v8a,x86_64
 
 #####################################################
 # Signing configs for signing zips and APKs
@@ -19,10 +34,10 @@ abiList=[string]
 #####################################################
 
 # Path to keystore file
-keyStore=string
+# keyStore=/path/to/keystore.jks
 # Keystore password
-keyStorePass=string
+# keyStorePass=your_store_password
 # The desired key alias in the keystore
-keyAlias=string
+# keyAlias=your_key_alias
 # Password of specified key alias
-keyPass=string
+# keyPass=your_key_password
