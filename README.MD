@@ -47,6 +47,12 @@ Popular languages / Idiomas populares:
 - 🇧🇷 [**OBTER APK RÁPIDO**](OBTER_APK_RAPIDO.md) ← Comece aqui! (Português)
 - 🇬🇧 [**GET APK QUICK**](GET_APK_QUICK.md) ← Start here! (English)
 
+**Need help compiling for ARM64 or fixing CI checks?**
+- 🔧 [**Guia de Troubleshooting ARM64**](GUIA_COMPILACAO_ARM64_TROUBLESHOOTING.md) ← Como acompanhar até compilar! (PT-BR)
+- 🔧 [**ARM64 Troubleshooting Guide**](ARM64_COMPILATION_TROUBLESHOOTING_GUIDE.md) ← Track to compilation! (EN)
+- 📊 [**CI Quick Reference**](CI_MONITORING_QUICKREF.md) ← Monitor checks
+- 📈 [**Workflow Diagrams**](ARM64_COMPILATION_WORKFLOW_DIAGRAM.md) ← Visual guide
+
 ---
 
 ## Introduction
@@ -169,6 +175,16 @@ python3 build.py ndk
 # Build everything
 python3 build.py -v all
 ```
+
+### 🔧 Troubleshooting & Monitoring
+
+**Need help fixing compilation errors or tracking CI checks?**
+
+- 🇧🇷 [**Guia Completo de Troubleshooting**](GUIA_COMPILACAO_ARM64_TROUBLESHOOTING.md) - Como acompanhar até compilar para ARM64, arrumando cada vez que checks falham (Português)
+- 🇬🇧 [**Complete Troubleshooting Guide**](ARM64_COMPILATION_TROUBLESHOOTING_GUIDE.md) - How to track ARM64 compilation and fix failing checks (English)
+- 📊 [**CI/CD Quick Reference**](CI_MONITORING_QUICKREF.md) - Monitor GitHub Actions status and logs
+
+### 📚 Build Documentation
 
 **Build Guides:**
 - 🇧🇷 [**Como Compilar para ARM64**](COMPILAR_ARM64.md) - Guia rápido em português
