@@ -321,7 +321,31 @@ def run_ndk_build(cmds: list[str]):
     os.chdir("..")
 
 
+def validate_xz_embedded_headers():
+    """Fail fast if xz-embedded headers are corrupted (common merge/header-injection issue)."""
+    checks = {
+        Path("native", "src", "external", "xz-embedded", "xz_private.h"): (
+            "#ifndef XZ_PRIVATE_H",
+            "#define XZ_PRIVATE_H",
+            "#endif",
+        ),
+        Path("native", "src", "external", "xz-embedded", "xz_lzma2.h"): (
+            "#ifndef XZ_LZMA2_H",
+            "#define XZ_LZMA2_H",
+            "#endif",
+        ),
+    }
+    for header, required_tokens in checks.items():
+        if not header.exists():
+            error(f"Missing required xz header: {header}")
+        content = header.read_text(encoding="utf-8", errors="ignore")
+        for token in required_tokens:
+            if token not in content:
+                error(f"Corrupted xz header detected ({header}): missing token '{token}'")
+
+
 def build_cpp_src(targets: set[str]):
+    validate_xz_embedded_headers()
     cmds = []
     clean = False
 
