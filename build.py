@@ -322,26 +322,44 @@ def run_ndk_build(cmds: list[str]):
 
 
 def validate_xz_embedded_headers():
-    """Fail fast if xz-embedded headers are corrupted (common merge/header-injection issue)."""
+    """Validate xz headers and auto-restore tracked originals if local mutations are detected."""
     checks = {
-        Path("native", "src", "external", "xz-embedded", "xz_private.h"): (
+        "native/src/external/xz-embedded/xz_private.h": (
             "#ifndef XZ_PRIVATE_H",
             "#define XZ_PRIVATE_H",
             "#endif",
         ),
-        Path("native", "src", "external", "xz-embedded", "xz_lzma2.h"): (
+        "native/src/external/xz-embedded/xz_lzma2.h": (
             "#ifndef XZ_LZMA2_H",
             "#define XZ_LZMA2_H",
             "#endif",
         ),
     }
+
+    def is_valid(path: Path, tokens: tuple[str, ...]) -> bool:
+        if not path.exists():
+            return False
+        content = path.read_text(encoding="utf-8", errors="ignore")
+        return all(token in content for token in tokens)
+
+    corrupted = []
     for header, required_tokens in checks.items():
-        if not header.exists():
-            error(f"Missing required xz header: {header}")
-        content = header.read_text(encoding="utf-8", errors="ignore")
-        for token in required_tokens:
-            if token not in content:
-                error(f"Corrupted xz header detected ({header}): missing token '{token}'")
+        path = Path(header)
+        if not is_valid(path, required_tokens):
+            corrupted.append(header)
+
+    if not corrupted:
+        return
+
+    vprint(f"Detected corrupted xz headers, restoring from git index: {', '.join(corrupted)}")
+    proc = execv(["git", "checkout", "--", *corrupted])
+    if proc.returncode != 0:
+        error("Failed to restore corrupted xz headers from git index")
+
+    for header, required_tokens in checks.items():
+        path = Path(header)
+        if not is_valid(path, required_tokens):
+            error(f"Corrupted xz header detected after restore: {header}")
 
 
 def build_cpp_src(targets: set[str]):
