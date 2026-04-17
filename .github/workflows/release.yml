@@ -1,0 +1,98 @@
+name: Release Canonical (Signed)
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_channel:
+        description: 'official (requires signing secrets) or internal-validation'
+        required: true
+        default: 'official'
+        type: choice
+        options:
+          - official
+          - internal-validation
+      upload_symbols:
+        description: 'Upload mapping/native symbols artifact'
+        required: true
+        default: true
+        type: boolean
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release-build:
+    name: Build release artifacts
+    runs-on: macos-15
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup environment
+        uses: ./.github/actions/setup
+        with:
+          is-asset-build: true
+
+      - name: Enforce signing policy for official release
+        if: ${{ github.event_name == 'push' || inputs.release_channel == 'official' }}
+        env:
+          RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+          RELEASE_STORE_PASS: ${{ secrets.RELEASE_STORE_PASS }}
+          RELEASE_KEY_PASS: ${{ secrets.RELEASE_KEY_PASS }}
+        run: |
+          for v in RELEASE_KEYSTORE_BASE64 RELEASE_KEY_ALIAS RELEASE_STORE_PASS RELEASE_KEY_PASS; do
+            if [ -z "${!v}" ]; then
+              echo "::error::Missing required secret for official signed release: $v"
+              exit 1
+            fi
+          done
+
+      - name: Build release
+        run: ./build.py -vr all
+
+      - name: Verify signed release output policy
+        run: |
+          set -euo pipefail
+          found_release_apk=$(find out -type f -name '*release*.apk' | head -n 1 || true)
+          if [ -z "$found_release_apk" ]; then
+            echo '::error::No release APK generated in out/'
+            exit 1
+          fi
+          if find out -type f -name '*unsigned*.apk' | grep -q .; then
+            echo '::error::Unsigned APK detected in release output.'
+            find out -type f -name '*unsigned*.apk'
+            exit 1
+          fi
+
+      - name: Stop Gradle daemon
+        run: ./app/gradlew --stop
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-${{ github.ref_name || github.sha }}
+          path: out
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 9
+
+      - name: Upload mapping and native symbols
+        if: ${{ always() && (github.event_name == 'push' || inputs.upload_symbols) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-symbols-${{ github.ref_name || github.sha }}
+          path: app/apk/build/outputs
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 9

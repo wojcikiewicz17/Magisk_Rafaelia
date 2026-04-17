@@ -423,7 +423,7 @@ class PreCIValidator:
         print("⚙️ Validating CI workflow contracts...")
         workflow_files = [
             self.repo_root / ".github/workflows/ci.yml",
-            self.repo_root / ".github/workflows/build.yml",
+            self.repo_root / ".github/workflows/release.yml",
         ]
         issues: List[str] = []
         for wf in workflow_files:
@@ -447,7 +447,7 @@ class PreCIValidator:
         return ValidationResult(
             "CI Contracts",
             True,
-            "Primary CI workflows include build invocation and artifact upload",
+            "Canonical CI/release workflows include build invocation and artifact upload",
         )
     
     def run_all_validations(self, skip_slow: bool = False) -> bool:

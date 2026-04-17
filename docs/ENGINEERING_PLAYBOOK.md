@@ -11,8 +11,8 @@ Este documento define a **fonte única de verdade** para build/release do projet
 3. **Build Android release**: `python3 build.py -vr all`
 4. **Build nativo (C/C++)**: `native/CMakeLists.txt`
 5. **Validação pré-CI**: `scripts/pre_ci_validate.py`
-6. **CI principal**: `.github/workflows/ci.yml`
-7. **Build de artefatos**: `.github/workflows/build.yml`
+6. **CI principal (canônico)**: `.github/workflows/ci.yml`
+7. **Release principal (canônico)**: `.github/workflows/release.yml`
 
 ## Pipeline mínimo coerente
 
@@ -72,7 +72,7 @@ python3 build.py -vr all
 
 - APKs em `app/apk/build/outputs/...`
 - Saídas de build em `out/`
-- Artefatos de CI via Actions (jobs em `ci.yml` e `build.yml`)
+- Artefatos de CI/Release via Actions (jobs em `ci.yml` e `release.yml`)
 
 ## Política de mudanças estruturais
 

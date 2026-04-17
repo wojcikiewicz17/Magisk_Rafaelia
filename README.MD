@@ -21,6 +21,12 @@ This cognitive-optimized approach:
 
 **Contributing?** See [CONTRIBUTING.md](CONTRIBUTING.md) and [Branching Strategy](docs/BRANCHING_STRATEGY.md)
 
+### 🧪 Official CI/CD Pipelines
+
+- **Continuous CI (PR/push)**: `.github/workflows/ci.yml`
+- **Release/manual pipeline**: `.github/workflows/release.yml`
+- **Workflow governance**: [docs/WORKFLOW_ORGANIZATION.md](docs/WORKFLOW_ORGANIZATION.md)
+
 ---
 
 ## 🌍 Multilingual Documentation / Documentação Multilíngue

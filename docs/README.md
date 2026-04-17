@@ -10,6 +10,8 @@
 
 ## CI / Workflow governance
 
+- Canonical CI workflow: [../.github/workflows/ci.yml](../.github/workflows/ci.yml)
+- Canonical release workflow: [../.github/workflows/release.yml](../.github/workflows/release.yml)
 - Workflow organization: [WORKFLOW_ORGANIZATION.md](WORKFLOW_ORGANIZATION.md)
 - Branching strategy: [BRANCHING_STRATEGY.md](BRANCHING_STRATEGY.md)
 - Quick reference: [QUICK_REFERENCE.md](QUICK_REFERENCE.md)
