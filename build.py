@@ -257,10 +257,10 @@ def cmd_out(cmds: list):
     try:
         result = subprocess.run(
             cmds,
-            stdout=subprocess.PIPE,
+            stdout=subprocess.PIPE,  # keep a single stdout binding
             stderr=subprocess.PIPE,
-            shell=is_windows,
             check=True,
+            shell=is_windows,
         )
         return result.stdout.strip().decode("utf-8", errors="replace")
     except subprocess.CalledProcessError as e:
