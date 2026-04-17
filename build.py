@@ -49,18 +49,22 @@ from zipfile import ZipFile
 
 
 # Terminal color output helpers
+def safe_print(text: str):
+    """Print text without crashing on limited console encodings (e.g. cp1252 on Windows CI)."""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        encoding = sys.stdout.encoding or "utf-8"
+        sys.stdout.buffer.write((text + "\n").encode(encoding, errors="replace"))
+
+
 def color_print(code, str):
     """Print colored text to terminal if colors are supported"""
     if no_color:
-        print(str)
+        safe_print(str)
     else:
         str = str.replace("\n", f"\033[0m\n{code}")
-        print(f"{code}{str}\033[0m")
-    if no_color:
-        print(str)
-    else:
-        str = str.replace("\n", f"\033[0m\n{code}")
-        print(f"{code}{str}\033[0m")
+        safe_print(f"{code}{str}\033[0m")
 
 
 def error(str):
@@ -77,7 +81,7 @@ def header(str):
 def vprint(str):
     """Print verbose output if verbose mode is enabled"""
     if args.verbose > 0:
-        print(str)
+        safe_print(str)
 
 
 # OS detection
@@ -317,7 +321,31 @@ def run_ndk_build(cmds: list[str]):
     os.chdir("..")
 
 
+def validate_xz_embedded_headers():
+    """Fail fast if xz-embedded headers are corrupted (common merge/header-injection issue)."""
+    checks = {
+        Path("native", "src", "external", "xz-embedded", "xz_private.h"): (
+            "#ifndef XZ_PRIVATE_H",
+            "#define XZ_PRIVATE_H",
+            "#endif",
+        ),
+        Path("native", "src", "external", "xz-embedded", "xz_lzma2.h"): (
+            "#ifndef XZ_LZMA2_H",
+            "#define XZ_LZMA2_H",
+            "#endif",
+        ),
+    }
+    for header, required_tokens in checks.items():
+        if not header.exists():
+            error(f"Missing required xz header: {header}")
+        content = header.read_text(encoding="utf-8", errors="ignore")
+        for token in required_tokens:
+            if token not in content:
+                error(f"Corrupted xz header detected ({header}): missing token '{token}'")
+
+
 def build_cpp_src(targets: set[str]):
+    validate_xz_embedded_headers()
     cmds = []
     clean = False
 
