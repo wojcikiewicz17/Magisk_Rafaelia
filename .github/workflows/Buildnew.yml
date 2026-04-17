@@ -9,6 +9,8 @@ on:
 env:
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
   CARGO_HOME: ${{ github.workspace }}/.cargo
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: "utf-8"
 
 jobs:
   setup:
@@ -56,7 +58,7 @@ jobs:
           sdkmanager --install "ndk;29.2.11058015" --sdk_root=$ANDROID_HOME
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@nightly-2026-04-17
         with:
           targets: ${{ matrix.target }}
 
@@ -79,7 +81,13 @@ jobs:
 
       - name: Setup NDK
         run: python3 build.py ndk
-        continue-on-error: true
+
+      - name: Native preflight (xz + build.py)
+        run: |
+          python3 -m py_compile build.py
+          cc -fsyntax-only native/src/external/xz-embedded/xz_crc32.c
+          cc -fsyntax-only native/src/external/xz-embedded/xz_dec_lzma2.c
+          cc -fsyntax-only native/src/external/xz-embedded/xz_dec_stream.c
 
       - name: Build native binaries
         run: python3 build.py native -r -v

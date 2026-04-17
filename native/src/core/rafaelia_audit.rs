@@ -31,7 +31,7 @@
  * ---
  */
 
-use base::{libc, LogLevel, ResultExt, Utf8CStr, cstr};
+use base::libc;
 use std::collections::VecDeque;
 use std::fs::{File, OpenOptions, create_dir_all};
 use std::io::{Write, BufWriter};
