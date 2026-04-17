@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Set build matrix
         id: set-matrix
-        run: echo "matrix={\"include\":[{\"abi\":\"arm64-v8a\",\"target\":\"aarch64-linux-android\"},{\"abi\":\"armeabi-v7a\",\"target\":\"thumbv7neon-linux-androideabi\"}]}" >> $GITHUB_OUTPUT
+        run: echo "matrix={\"include\":[{\"abi\":\"arm64-v8a\",\"target\":\"aarch64-linux-android\"},{\"abi\":\"armeabi-v7a\",\"target\":\"thumbv7neon-linux-androideabi\"},{\"abi\":\"x86\",\"target\":\"i686-linux-android\"},{\"abi\":\"x86_64\",\"target\":\"x86_64-linux-android\"},{\"abi\":\"riscv64\",\"target\":\"riscv64-linux-android\"}]}" >> $GITHUB_OUTPUT
 
   build:
     needs: setup
@@ -58,7 +58,7 @@ jobs:
           sdkmanager --install "ndk;29.2.11058015" --sdk_root=$ANDROID_HOME
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@nightly-2026-04-17
+        uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
 

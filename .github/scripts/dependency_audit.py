@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOWS = ROOT / ".github" / "workflows"
+ACTION_DEFINITIONS = ROOT / ".github" / "actions"
 WRAPPER = ROOT / "app" / "gradle" / "wrapper" / "gradle-wrapper.properties"
 VERSIONS = ROOT / "app" / "gradle" / "libs.versions.toml"
 
@@ -22,6 +23,8 @@ MIN_ACTION_MAJOR = {
     "actions/download-artifact": 4,
     "android-actions/setup-android": 3,
     "gradle/actions/setup-gradle": 4,
+    "actions/first-interaction": 3,
+    "gacts/run-and-post-run": 1,
 }
 
 MIN_GRADLE_MAJOR = 9
@@ -41,21 +44,28 @@ def parse_major(version: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
+def _scan_uses_references(file: Path) -> list[tuple[int, str, str]]:
+    refs: list[tuple[int, str, str]] = []
+    for idx, line in enumerate(file.read_text(encoding="utf-8").splitlines(), start=1):
+        m = re.search(r"uses:\s*([\w./-]+)@(v\d+)", line)
+        if m:
+            refs.append((idx, m.group(1), m.group(2)))
+    return refs
+
+
 def audit_workflows() -> list[Finding]:
     findings: list[Finding] = []
-    for wf in sorted(WORKFLOWS.glob("*.yml")):
-        for idx, line in enumerate(wf.read_text(encoding="utf-8").splitlines(), start=1):
-            m = re.search(r"uses:\s*([\w./-]+)@(v\d+)", line)
-            if not m:
-                continue
-            action, version = m.group(1), m.group(2)
+
+    files = sorted(WORKFLOWS.glob("*.yml")) + sorted(ACTION_DEFINITIONS.glob("**/action.yml"))
+    for file in files:
+        for idx, action, version in _scan_uses_references(file):
             if action in MIN_ACTION_MAJOR:
                 major = parse_major(version)
                 if major is not None and major < MIN_ACTION_MAJOR[action]:
                     findings.append(
                         Finding(
                             "ERROR",
-                            f"{wf.relative_to(ROOT)}:{idx}",
+                            f"{file.relative_to(ROOT)}:{idx}",
                             f"{action}@{version} is obsolete (min supported v{MIN_ACTION_MAJOR[action]}).",
                         )
                     )
